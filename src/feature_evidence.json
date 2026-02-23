@@ -1,0 +1,25 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-email-and-password-input-fields-to-the-login-interface-to-support-credential-based-authentication-alongside-internet-identity",
+      "featureTitle": "Add email and password input fields to the login interface to support credential-based authentication alongside Internet Identity",
+      "files": [
+        "frontend/src/components/ProfileSetupModal.tsx",
+        "frontend/src/utils/validation.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

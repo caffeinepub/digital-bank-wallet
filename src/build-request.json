@@ -1,0 +1,60 @@
+{
+  "kind": "build_request",
+  "title": "Add email and password input fields",
+  "projectName": "BlueStone Bank",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add email and password input fields to the login interface to support credential-based authentication alongside Internet Identity",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ],
+        "quotes": [
+          "add space for password and email"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Email input field is present with appropriate validation (valid email format)",
+        "Password input field is present with masked input for security",
+        "Input fields are styled consistently with the existing warm neutral design aesthetic",
+        "Fields are positioned logically within the login flow"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Store and manage email and password credentials in the backend user profile system",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ],
+        "quotes": [
+          "add space for password and email"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User profile schema includes email field",
+        "Password is securely hashed before storage",
+        "Backend provides methods to validate credentials during authentication"
+      ]
+    }
+  ],
+  "constraints": [
+    "Maintain existing Internet Identity authentication as the primary method",
+    "Follow existing ProfileSetupModal pattern for collecting user information",
+    "Use the warm neutral color scheme (beige, charcoal, soft gold) defined in the design system"
+  ],
+  "nonGoals": [
+    "Removing or replacing Internet Identity authentication",
+    "Implementing email verification workflows",
+    "Adding password reset functionality",
+    "Creating a separate registration flow"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

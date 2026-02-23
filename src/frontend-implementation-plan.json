@@ -1,0 +1,39 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add Email and Password Input Fields to Login Interface",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add email and password input fields to the login interface to support credential-based authentication alongside Internet Identity",
+      "acceptanceCriteria": [
+        "Email input field is present with appropriate validation (valid email format)",
+        "Password input field is present with masked input for security",
+        "Input fields are styled consistently with the existing warm neutral design aesthetic",
+        "Fields are positioned logically within the login flow"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/LoginButton.tsx",
+          "operation": "modify",
+          "description": "Add email and password input fields below the Internet Identity login button. Include email validation to ensure proper email format and password input with masked characters for security. Style the inputs consistently with the warm neutral color scheme (beige, charcoal, soft gold) defined in frontend/src/index.css. Position the credential fields logically within the existing login flow, maintaining Internet Identity as the primary authentication method. Verify the authorization component's usage instructions before implementing authentication logic."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetupModal.tsx",
+          "operation": "modify",
+          "description": "Add email and password fields to the profile setup modal following the existing pattern for collecting user information. Include email format validation and password input masking. Style fields consistently with the warm neutral design aesthetic. Ensure these fields are saved as part of the user profile using the saveCallerUserProfile mutation when the profile is created for the first time."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "modify",
+          "description": "Update the profile mutation to include email and password fields when saving the caller's user profile. Ensure the mutation properly handles the expanded UserProfile type that now includes email and password properties as defined in the backend interface."
+        },
+        {
+          "path": "frontend/src/utils/validation.ts",
+          "operation": "modify",
+          "description": "Add email validation function that checks for valid email format using a standard regex pattern. Return a ValidationResult object with appropriate error messages for invalid email formats, consistent with the existing validation utilities for amounts and Principal IDs."
+        }
+      ]
+    }
+  ]
+}

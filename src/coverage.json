@@ -1,0 +1,55 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T15:37:47.007Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Add email and password input fields to the login interface to support credential-based authentication alongside Internet Identity",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/LoginButton.tsx",
+          "frontend/src/components/ProfileSetupModal.tsx",
+          "frontend/src/hooks/useUserProfile.ts",
+          "frontend/src/utils/validation.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ProfileSetupModal.tsx",
+          "frontend/src/utils/validation.ts"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Store and manage email and password credentials in the backend user profile system",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/utils/validation.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
