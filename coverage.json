@@ -1,0 +1,132 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T22:03:42.464Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 7,
+    "implemented": 7,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Redesign the Dashboard page to display a modern bank home layout with a prominently featured account balance section at the top, including a show/hide toggle button to mask/unmask the balance amount.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/components/BalanceCard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/components/BalanceCard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add an interactive virtual debit card component to the dashboard that displays masked card number (•••• •••• •••• 1234), the user's name, expiry date, and BlueStone Bank branding. The card should flip on click/tap to reveal card details on the back (CVV area, card network logo).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/VirtualCard.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/VirtualCard.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Replace the existing QuickActions component with an expanded set of four quick action buttons on the dashboard: Transfer, Deposit, Bill Pay, and Top-up. Each button should have a distinct icon, label, and color accent. Bill Pay and Top-up can show a 'Coming Soon' toast since backend support is not yet implemented.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/QuickActions.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/QuickActions.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Update the RecentTransactionsList component to display a richer activity feed styled like a modern banking app — showing transaction type icon, merchant/description, date, and color-coded amount (green for credits, red for debits). Show at least 5 recent transactions with a 'View All' link to the full history page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/RecentTransactionsList.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/RecentTransactionsList.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add a multiple accounts overview section to the dashboard showing at least two account cards: a Checking account and a Savings account, each displaying account type label, a partial masked account number, and a balance. Use realistic dummy data for the Savings account while the Checking account reflects the live backend balance.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AccountsOverview.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AccountsOverview.tsx",
+          "frontend/src/pages/Dashboard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Ensure the login page retains its professional BlueStone Bank design with email field, password field, Remember Me checkbox, Forgot Password link, Sign In button, and a navigation path that leads to the new dashboard upon successful authentication.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Apply a cohesive modern banking visual theme throughout the dashboard — use a dark navy or deep charcoal primary palette with gold/amber accent colors, clean card-based layout with subtle shadows, premium typography, and smooth micro-animations on interactions (card flip, balance toggle, button hover).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/tailwind.config.js",
+          "frontend/src/index.css",
+          "frontend/src/components/VirtualCard.tsx",
+          "frontend/src/components/BalanceCard.tsx",
+          "frontend/src/components/QuickActions.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/tailwind.config.js",
+          "frontend/src/index.css",
+          "frontend/src/components/VirtualCard.tsx",
+          "frontend/src/components/BalanceCard.tsx",
+          "frontend/src/components/QuickActions.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/App.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/assets/generated/virtual-card-bg.dim_600x380.png",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AccountsOverview.tsx",
+    "frontend/src/components/BalanceCard.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/QuickActions.tsx",
+    "frontend/src/components/RecentTransactionsList.tsx",
+    "frontend/src/components/VirtualCard.tsx",
+    "frontend/src/index.css",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

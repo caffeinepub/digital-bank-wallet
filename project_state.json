@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "BlueStone Bank app with a professional login page and a full modern bank home dashboard including account balances, virtual card display, quick actions, and transaction history.",
+  "architectural_notes": [
+    "App uses BlueStone Bank branding consistently across all pages",
+    "Dashboard uses realistic dummy data for accounts, balances, and transactions"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- BlueStone Bank virtual debit card illustration in dark navy with gold accents, showing chip, card network logo placeholder, and subtle geometric pattern (virtual-card-bg.dim_600x380.png)",
+  "existing_features": [
+    {
+      "id": "feature-redesign-the-dashboard-page-to-display-a-modern-bank-home-layout-with-a-prominently-featured-account-balance-section-at-the-top-including-a-show-hide-toggle-button-to-mask-unmask-the-balance-amount",
+      "title": "Redesign the Dashboard page to display a modern bank home layout with a prominently featured account balance section at the top, including a show/hide toggle button to mask/unmask the balance amount.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-interactive-virtual-debit-card-component-to-the-dashboard-that-displays-masked-card-number-1234-the-user-s-name-expiry-date-and-bluestone-bank-branding-the-card-should-flip-on-click-tap-to-reveal-card-details-on-the-back-cvv-area-card-network-logo",
+      "title": "Add an interactive virtual debit card component to the dashboard that displays masked card number (•••• •••• •••• 1234), the user's name, expiry date, and BlueStone Bank branding. The card should flip on click/tap to reveal card details on the back (CVV area, card network logo).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-existing-quickactions-component-with-an-expanded-set-of-four-quick-action-buttons-on-the-dashboard-transfer-deposit-bill-pay-and-top-up-each-button-should-have-a-distinct-icon-label-and-color-accent-bill-pay-and-top-up-can-show-a-coming-soon-toast-since-backend-support-is-not-yet-implemented",
+      "title": "Replace the existing QuickActions component with an expanded set of four quick action buttons on the dashboard: Transfer, Deposit, Bill Pay, and Top-up. Each button should have a distinct icon, label, and color accent. Bill Pay and Top-up can show a 'Coming Soon' toast since backend support is not yet implemented.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-recenttransactionslist-component-to-display-a-richer-activity-feed-styled-like-a-modern-banking-app-showing-transaction-type-icon-merchant-description-date-and-color-coded-amount-green-for-credits-red-for-debits-show-at-least-5-recent-transactions-with-a-view-all-link-to-the-full-history-page",
+      "title": "Update the RecentTransactionsList component to display a richer activity feed styled like a modern banking app — showing transaction type icon, merchant/description, date, and color-coded amount (green for credits, red for debits). Show at least 5 recent transactions with a 'View All' link to the full history page.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-multiple-accounts-overview-section-to-the-dashboard-showing-at-least-two-account-cards-a-checking-account-and-a-savings-account-each-displaying-account-type-label-a-partial-masked-account-number-and-a-balance-use-realistic-dummy-data-for-the-savings-account-while-the-checking-account-reflects-the-live-backend-balance",
+      "title": "Add a multiple accounts overview section to the dashboard showing at least two account cards: a Checking account and a Savings account, each displaying account type label, a partial masked account number, and a balance. Use realistic dummy data for the Savings account while the Checking account reflects the live backend balance.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-login-page-retains-its-professional-bluestone-bank-design-with-email-field-password-field-remember-me-checkbox-forgot-password-link-sign-in-button-and-a-navigation-path-that-leads-to-the-new-dashboard-upon-successful-authentication",
+      "title": "Ensure the login page retains its professional BlueStone Bank design with email field, password field, Remember Me checkbox, Forgot Password link, Sign In button, and a navigation path that leads to the new dashboard upon successful authentication.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-modern-banking-visual-theme-throughout-the-dashboard-use-a-dark-navy-or-deep-charcoal-primary-palette-with-gold-amber-accent-colors-clean-card-based-layout-with-subtle-shadows-premium-typography-and-smooth-micro-animations-on-interactions-card-flip-balance-toggle-button-hover",
+      "title": "Apply a cohesive modern banking visual theme throughout the dashboard — use a dark navy or deep charcoal primary palette with gold/amber accent colors, clean card-based layout with subtle shadows, premium typography, and smooth micro-animations on interactions (card flip, balance toggle, button hover).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Professional login page with email, password, Remember Me, and Forgot Password",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Bank home dashboard with account balance (show/hide toggle), virtual card with flip interaction, quick action buttons (Transfer, Deposit, Bill Pay, Top-up), recent transactions feed, and multiple account overview",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "BlueStone Bank",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
