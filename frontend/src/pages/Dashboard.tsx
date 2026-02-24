@@ -1,20 +1,18 @@
 import { useGetBalance } from '../hooks/useBalance';
 import { useGetTransactions } from '../hooks/useTransactions';
 import { useInitializeAccount } from '../hooks/useQueries';
-import { useGetCallerUserProfile } from '../hooks/useUserProfile';
-import BalanceCard from '../components/BalanceCard';
-import RecentTransactionsList from '../components/RecentTransactionsList';
-import QuickActions from '../components/QuickActions';
-import VirtualCard from '../components/VirtualCard';
-import AccountsOverview from '../components/AccountsOverview';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useEffect } from 'react';
+import MobileTopBar from '../components/MobileTopBar';
+import MobileBalanceCard from '../components/MobileBalanceCard';
+import MobileQuickActions from '../components/MobileQuickActions';
+import MobileRecentTransactions from '../components/MobileRecentTransactions';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 export default function Dashboard() {
-  const { data: balance, isLoading: balanceLoading, error: balanceError } = useGetBalance();
-  const { data: transactions, isLoading: transactionsLoading } = useGetTransactions();
-  const { data: userProfile } = useGetCallerUserProfile();
+  const { isLoading: balanceLoading, error: balanceError } = useGetBalance();
+  const { isLoading: _transactionsLoading } = useGetTransactions();
   const initializeAccount = useInitializeAccount();
 
   const needsInitialization = balanceError?.message?.includes('Account not found');
@@ -27,14 +25,15 @@ export default function Dashboard() {
 
   if (balanceLoading || initializeAccount.isPending) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto" style={{ color: 'oklch(0.78 0.14 75)' }} />
-            <p className="text-muted-foreground font-medium">
-              {initializeAccount.isPending ? 'Setting up your account...' : 'Loading your dashboard...'}
-            </p>
-          </div>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'oklch(0.22 0.08 240)' }}
+      >
+        <div className="text-center space-y-4">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto text-white" />
+          <p className="text-white/70 font-medium">
+            {initializeAccount.isPending ? 'Setting up your account...' : 'Loading your dashboard...'}
+          </p>
         </div>
       </div>
     );
@@ -42,7 +41,7 @@ export default function Dashboard() {
 
   if (balanceError && !needsInitialization) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-md">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -53,46 +52,37 @@ export default function Dashboard() {
     );
   }
 
-  const recentTransactions = transactions
-    ? [...transactions].sort((a, b) => Number(b.timestamp - a.timestamp)).slice(0, 5)
-    : [];
-
-  const userName = userProfile?.name;
-
   return (
-    <div className="min-h-screen" style={{ background: 'oklch(0.96 0.008 240)' }}>
-      <div className="container mx-auto px-4 py-6 max-w-2xl space-y-6 animate-fade-in">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: 'oklch(0.96 0.008 240)' }}
+    >
+      {/* Centered mobile-width container */}
+      <div className="flex-1 mx-auto w-full max-w-md flex flex-col">
 
-        {/* Balance Card */}
-        <BalanceCard balance={balance ?? BigInt(0)} userName={userName} />
-
-        {/* Virtual Card */}
-        <div className="bg-card rounded-2xl border border-border shadow-card p-5">
-          <h2 className="text-lg font-bold text-foreground mb-4">My Card</h2>
-          <VirtualCard
-            cardholderName={userName ?? 'Account Holder'}
-            lastFour="4291"
-            expiry="08/28"
-          />
+        {/* Blue header section */}
+        <div
+          className="flex-shrink-0"
+          style={{
+            background: 'linear-gradient(160deg, oklch(0.22 0.09 240) 0%, oklch(0.32 0.10 230) 100%)',
+          }}
+        >
+          <MobileTopBar notificationCount={2} />
+          <MobileBalanceCard />
+          <MobileQuickActions />
         </div>
 
-        {/* Accounts Overview */}
-        <AccountsOverview />
-
-        {/* Quick Actions */}
-        <div className="bg-card rounded-2xl border border-border shadow-card p-5">
-          <QuickActions />
+        {/* White content section with rounded top corners */}
+        <div
+          className="flex-1 rounded-t-3xl shadow-navy pb-28"
+          style={{ background: 'oklch(0.98 0.004 240)' }}
+        >
+          <MobileRecentTransactions />
         </div>
-
-        {/* Recent Transactions */}
-        <RecentTransactionsList
-          transactions={recentTransactions}
-          isLoading={transactionsLoading}
-        />
-
-        {/* Bottom padding */}
-        <div className="h-4" />
       </div>
+
+      {/* Fixed bottom nav */}
+      <MobileBottomNav activeTab="home" />
     </div>
   );
 }

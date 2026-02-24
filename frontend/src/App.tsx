@@ -18,6 +18,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Eye, EyeOff, Shield, Lock } from 'lucide-react';
 import { useState } from 'react';
 
+// Temporary hardcoded credentials for demo access
+const TEMP_EMAIL = 'adelekejoshua436@gmail.com';
+const TEMP_PASSWORD = 'Adeleke@24';
+
 function LayoutWrapper() {
   return (
     <Layout>
@@ -76,7 +80,11 @@ declare module '@tanstack/react-router' {
   }
 }
 
-function LoginPortal() {
+interface LoginPortalProps {
+  onTempLogin: () => void;
+}
+
+function LoginPortal({ onTempLogin }: LoginPortalProps) {
   const { login, loginStatus } = useInternetIdentity();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -84,6 +92,7 @@ function LoginPortal() {
   const [rememberMe, setRememberMe] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [credentialError, setCredentialError] = useState('');
 
   const isLoggingIn = loginStatus === 'logging-in';
 
@@ -116,14 +125,19 @@ function LoginPortal() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCredentialError('');
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
     if (!isEmailValid || !isPasswordValid) return;
-    try {
-      await login();
-    } catch (error: any) {
-      console.error('Login error:', error);
+
+    // Check hardcoded temporary credentials
+    if (email === TEMP_EMAIL && password === TEMP_PASSWORD) {
+      onTempLogin();
+      return;
     }
+
+    // Credentials don't match — show error
+    setCredentialError('Invalid email or password. Please try again.');
   };
 
   return (
@@ -223,6 +237,7 @@ function LoginPortal() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (emailError) validateEmail(e.target.value);
+                    if (credentialError) setCredentialError('');
                   }}
                   onBlur={(e) => validateEmail(e.target.value)}
                   className={`h-11 ${emailError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
@@ -244,6 +259,7 @@ function LoginPortal() {
                     onChange={(e) => {
                       setPassword(e.target.value);
                       if (passwordError) validatePassword(e.target.value);
+                      if (credentialError) setCredentialError('');
                     }}
                     onBlur={(e) => validatePassword(e.target.value)}
                     className={`h-11 pr-10 ${passwordError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
@@ -260,6 +276,14 @@ function LoginPortal() {
                 </div>
                 {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
               </div>
+
+              {/* Credential error message */}
+              {credentialError && (
+                <div className="rounded-lg px-4 py-3 text-sm font-medium text-destructive border border-destructive/30"
+                  style={{ background: 'oklch(0.97 0.02 25)' }}>
+                  {credentialError}
+                </div>
+              )}
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -326,12 +350,13 @@ function AppContent() {
   const { identity } = useInternetIdentity();
   const queryClient = useQueryClient();
   const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
+  const [isTempSessionActive, setIsTempSessionActive] = useState(false);
 
-  const isAuthenticated = !!identity;
-  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
+  const isAuthenticated = !!identity || isTempSessionActive;
+  const showProfileSetup = !!identity && !profileLoading && isFetched && userProfile === null;
 
   if (!isAuthenticated) {
-    return <LoginPortal />;
+    return <LoginPortal onTempLogin={() => setIsTempSessionActive(true)} />;
   }
 
   return (

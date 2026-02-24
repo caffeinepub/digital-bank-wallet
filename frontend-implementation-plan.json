@@ -1,171 +1,139 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "BlueStone Bank Full Dashboard with Virtual Card and Quick Actions",
+  "title": "Bluestone Bank Mobile Dashboard with Tagline and Reference Layout",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Redesign Dashboard page with prominent account balance section and show/hide toggle",
+      "summary": "Rebuild the Dashboard page top bar with hamburger menu, 'Bluestone Bank' branding with tagline 'Solid Foundation, Secure Funds', and notification bell with badge",
       "acceptanceCriteria": [
-        "Balance is displayed prominently at the top of the dashboard",
-        "A toggle button hides/shows the balance (masked as ••••••)",
-        "Balance updates correctly when fetched from the backend"
+        "Top bar displays hamburger menu icon on the left",
+        "Top bar shows 'Bluestone Bank' as the primary brand name",
+        "Tagline 'Solid Foundation, Secure Funds' appears directly beneath 'Bluestone Bank' in a smaller, lighter font",
+        "Notification bell icon with a red numeric badge appears on the right of the top bar",
+        "Top bar uses the dark navy/blue color scheme"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Restructure dashboard layout to feature balance prominently at the top with show/hide toggle state management and masked balance display (••••••)"
+          "path": "frontend/src/components/MobileTopBar.tsx",
+          "operation": "create",
+          "description": "Create a new sticky mobile top bar component with hamburger menu icon (left), centered branding section showing 'Bluestone Bank' title with 'Solid Foundation, Secure Funds' tagline beneath it, and notification bell icon with red numeric badge (right). Style with dark navy/blue background matching the existing theme from tailwind.config.js. Include props for notification count."
         },
         {
-          "path": "frontend/src/components/BalanceCard.tsx",
+          "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Add show/hide toggle button and conditional rendering logic to display either the actual formatted balance or masked placeholder (••••••)"
+          "description": "Import and render the new MobileTopBar component at the top of the Dashboard page, passing a hardcoded notification count (e.g., 2) as a prop. Position it as the first element in the mobile-first layout structure."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add interactive virtual debit card component with flip animation to reveal back details",
+      "summary": "Add a hero balance card below the top bar with personalized greeting, live balance, and blue gradient background",
       "acceptanceCriteria": [
-        "Virtual card is rendered with masked PAN, name, expiry, and bank branding",
-        "Clicking or tapping the card triggers a smooth 3D flip animation",
-        "Card back shows CVV placeholder and card network logo",
-        "Card uses BlueStone Bank color scheme"
+        "Card displays a personalized greeting using the authenticated user's profile name",
+        "Balance amount is fetched live from the backend via the existing balance hook",
+        "Card shows 'Your Balance' label above the amount and 'Available Balance' label below",
+        "Card has a blue gradient background consistent with the reference image style"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/VirtualCard.tsx",
+          "path": "frontend/src/components/MobileBalanceCard.tsx",
           "operation": "create",
-          "description": "Create VirtualCard component with flip state management, 3D CSS transform animations, front face displaying masked card number (•••• •••• •••• 1234), user name from profile, expiry date, chip icon, and the generated image frontend/public/assets/generated/virtual-card-bg.dim_600x380.png as background; back face showing CVV area and card network logo placeholder using BlueStone Bank dark navy and gold accent colors"
+          "description": "Create a new hero balance card component that displays a personalized greeting ('Hello, [User Name]') using the user's profile name fetched via useGetCallerUserProfile, shows 'Your Balance' label, fetches and displays the live balance amount in large bold text using useGetBalance hook, and includes an 'Available Balance' label below. Style with a blue gradient background matching the reference image. Handle loading states with skeleton placeholders."
         },
         {
           "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Import and render VirtualCard component below the balance section in the dashboard layout"
+          "description": "Import and render the MobileBalanceCard component directly below the MobileTopBar in the Dashboard page. Ensure it is positioned within the blue/navy background section of the mobile layout."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Replace QuickActions with expanded four-button set including Transfer, Deposit, Bill Pay, and Top-up",
+      "summary": "Add horizontal row of four circular quick-action buttons: Transfer, Deposit, Withdraw, and Pay Bills",
       "acceptanceCriteria": [
-        "Four quick action buttons are displayed: Transfer, Deposit, Bill Pay, Top-up",
-        "Transfer and Deposit navigate to their respective pages",
-        "Bill Pay and Top-up display a 'Coming Soon' toast notification",
-        "Each button has a unique icon and color accent"
+        "Four circular icon buttons displayed in a single horizontal row: Transfer, Deposit, Withdraw, Pay Bills",
+        "Transfer navigates to the /transfer route",
+        "Deposit navigates to the /deposit route",
+        "Withdraw navigates to the /withdraw route",
+        "Pay Bills shows a Coming Soon toast notification",
+        "Buttons are evenly spaced and visually consistent with the reference image"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/QuickActions.tsx",
+          "path": "frontend/src/components/MobileQuickActions.tsx",
+          "operation": "create",
+          "description": "Create a new mobile quick actions component displaying four circular icon buttons in a single horizontal row: Transfer, Deposit, Withdraw, and Pay Bills. Each button has a white circular background with an icon and a label below. Transfer button navigates to /transfer route, Deposit to /deposit, Withdraw to /withdraw. Pay Bills shows a 'Coming Soon' toast using the existing toast mechanism. Style buttons to be evenly spaced and match the reference image design with white circular backgrounds."
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Replace three-button layout with four-button grid including Transfer, Deposit, Bill Pay, and Top-up; add onClick handlers for Bill Pay and Top-up that trigger toast notifications with 'Coming Soon' message; assign distinct icons and color accents to each button"
+          "description": "Import and render the MobileQuickActions component below the MobileBalanceCard in the Dashboard page. Position it within the white/light content section that follows the blue header area."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Update RecentTransactionsList to display richer activity feed with modern banking app styling",
+      "summary": "Add Recent Transactions section displaying up to 5 recent transactions with category icons, relative dates, and color-coded amounts",
       "acceptanceCriteria": [
-        "Activity feed shows up to 5 most recent transactions",
-        "Each row displays icon, description, date, and signed amount",
-        "Credits are shown in green, debits in red",
-        "A 'View All' link navigates to the full transaction history page",
-        "Loading skeleton is displayed while data is fetching"
+        "Section has a bold 'Recent Transactions' heading",
+        "Up to 5 most recent transactions are displayed",
+        "Each row shows an icon, transaction name, relative date, and right-aligned amount",
+        "Credit amounts are green with a plus prefix and debit amounts are red with a minus prefix",
+        "Skeleton loaders shown while data is loading",
+        "Empty state message shown if no transactions exist"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/RecentTransactionsList.tsx",
+          "path": "frontend/src/components/MobileRecentTransactions.tsx",
+          "operation": "create",
+          "description": "Create a new mobile recent transactions component with a bold 'Recent Transactions' heading. Fetch transactions using the existing useTransactions hook, display up to 5 most recent transactions. Each row shows a category icon, transaction description/name, relative date (e.g., 'Yesterday', '2 Days Ago'), and right-aligned amount. Positive amounts are green with '+' prefix, negative amounts are red with '-' prefix. Show skeleton loaders during loading state and an empty state message if no transactions exist. Reuse existing formatters from frontend/src/utils/formatters.ts for dates and amounts."
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Enhance transaction row styling with transaction-type-specific icons, color-coded amounts (green for deposits/credits, red for withdrawals/debits), improve date formatting, limit display to 5 most recent transactions, and ensure 'View All' link is prominent"
+          "description": "Import and render the MobileRecentTransactions component below the MobileQuickActions in the Dashboard page, within the white/light content section."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Add multiple accounts overview section with Checking and Savings account cards",
+      "summary": "Add fixed bottom navigation bar with Home, Accounts, Payments, and More tabs",
       "acceptanceCriteria": [
-        "Two account cards are visible: Checking and Savings",
-        "Each card shows account type, masked account number, and balance",
-        "Checking account balance is sourced from the backend",
-        "Savings account uses realistic dummy data",
-        "Cards are styled consistently with the BlueStone Bank theme"
+        "Fixed bottom navigation bar is visible on the dashboard",
+        "Four tabs rendered: Home, Accounts, Payments, More each with an icon and label",
+        "Active tab is visually highlighted",
+        "Home tab navigates to the dashboard route",
+        "Accounts and Payments tabs show a Coming Soon toast if no route exists",
+        "Main content has sufficient bottom padding so nothing is hidden behind the nav bar"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AccountsOverview.tsx",
+          "path": "frontend/src/components/MobileBottomNav.tsx",
           "operation": "create",
-          "description": "Create AccountsOverview component displaying two account cards in a responsive grid: Checking account using live backend balance data from useBalance hook, and Savings account with hardcoded realistic dummy data; each card shows account type label, masked account number (e.g., ••••1234), and formatted balance using BlueStone Bank card styling"
+          "description": "Create a fixed bottom navigation bar component with four tabs: Home (house icon), Accounts (card icon), Payments (dollar icon), and More (three-dot icon). Each tab has an icon and label. Implement active tab highlighting (white or accent color). Home tab navigates to the dashboard route. Accounts and Payments tabs trigger a 'Coming Soon' toast if no dedicated routes exist. Accept an activeTab prop to control highlighting. Style with dark navy background matching the theme."
         },
         {
           "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Import and render AccountsOverview component in the dashboard layout between the virtual card and quick actions sections"
+          "description": "Import and render the MobileBottomNav component at the bottom of the Dashboard page with 'home' as the active tab. Add sufficient bottom padding (e.g., pb-20 or pb-24) to the main content wrapper to prevent content from being hidden behind the fixed bottom nav."
         }
       ]
     },
     {
       "id": "REQ-6",
-      "summary": "Ensure login page retains professional BlueStone Bank design and navigates to new dashboard",
+      "summary": "Update Dashboard to use mobile-first self-contained layout without generic Layout wrapper, with blue header section and white rounded content section",
       "acceptanceCriteria": [
-        "Login page shows email input, password input, Remember Me checkbox, and Forgot Password link",
-        "Sign In button is present and triggers Internet Identity authentication",
-        "Successful login navigates user to the new bank dashboard",
-        "BlueStone Bank branding is consistent"
+        "Dashboard does not use the generic Layout component header and footer",
+        "Top section has a blue/navy background containing the top bar and balance card",
+        "Content section below has a white or light grey background with rounded top corners",
+        "Layout is centered and max-width constrained for comfortable mobile readability on wider screens"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Verify LoginPortal component styling matches BlueStone Bank branding with dark navy and gold accents, ensure all required form elements are present (email, password, Remember Me, Forgot Password), and confirm successful authentication redirects to dashboard route"
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Apply cohesive modern banking visual theme with dark navy/charcoal palette and gold accents throughout dashboard",
-      "acceptanceCriteria": [
-        "Dashboard uses a dark navy or deep charcoal primary palette with gold/amber accents",
-        "All cards have consistent border-radius and subtle drop shadows",
-        "Micro-animations are applied to the card flip, balance toggle, and button hover states",
-        "Typography is clean and professional throughout",
-        "Theme is consistent between the login page and dashboard"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Update color palette to use dark navy (#1a2332) and deep charcoal (#2d3748) as primary colors with gold (#d4af37) and amber (#f59e0b) as accent colors; ensure card shadows, border-radius, and typography settings align with premium banking aesthetic"
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Define CSS custom properties for BlueStone Bank theme colors (--navy-primary, --charcoal-bg, --gold-accent) in both light and dark modes; add base styles for card components with consistent shadows and border-radius"
-        },
-        {
-          "path": "frontend/src/components/VirtualCard.tsx",
-          "operation": "modify",
-          "description": "Apply smooth CSS transition properties for 3D flip animation (transform-style: preserve-3d, transition duration 0.6s) and hover state scaling"
-        },
-        {
-          "path": "frontend/src/components/BalanceCard.tsx",
-          "operation": "modify",
-          "description": "Add smooth transition animation for balance toggle show/hide state change using CSS transitions"
-        },
-        {
-          "path": "frontend/src/components/QuickActions.tsx",
-          "operation": "modify",
-          "description": "Add hover state micro-animations with scale transform and shadow transitions for all quick action buttons"
-        },
         {
           "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Apply consistent card styling with navy/charcoal backgrounds and gold accents across all dashboard sections; ensure layout uses proper spacing and grid/flex patterns for modern banking UI"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Update LoginPortal component styling to use dark navy background with gold accent buttons ensuring visual consistency with dashboard theme"
+          "description": "Remove the Layout component wrapper from the Dashboard page. Restructure the page to be self-contained with a mobile-first layout: a top section with blue/navy background (using CSS custom properties from index.css) containing the MobileTopBar and MobileBalanceCard, followed by a white or light grey content section with rounded top corners (rounded-t-3xl or similar) containing MobileQuickActions and MobileRecentTransactions. Apply max-width constraint (max-w-md or max-w-lg) and center the layout (mx-auto) for comfortable mobile readability on wider screens. Ensure the MobileBottomNav remains fixed at the bottom and does not overlap content."
         }
       ]
     }
