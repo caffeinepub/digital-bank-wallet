@@ -1,14 +1,14 @@
 import { useGetBalance } from '../hooks/useBalance';
 import { useGetTransactions } from '../hooks/useTransactions';
 import { useInitializeAccount } from '../hooks/useQueries';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import MobileTopBar from '../components/MobileTopBar';
 import MobileBalanceCard from '../components/MobileBalanceCard';
 import MobileQuickActions from '../components/MobileQuickActions';
 import MobileRecentTransactions from '../components/MobileRecentTransactions';
 import MobileBottomNav from '../components/MobileBottomNav';
+import DebitCard from '../components/DebitCard';
 
 export default function Dashboard() {
   const { isLoading: balanceLoading, error: balanceError } = useGetBalance();
@@ -39,19 +39,6 @@ export default function Dashboard() {
     );
   }
 
-  if (balanceError && !needsInitialization) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Failed to load your account. Please try refreshing the page.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -69,6 +56,7 @@ export default function Dashboard() {
         >
           <MobileTopBar notificationCount={2} />
           <MobileBalanceCard />
+          <DebitCard />
           <MobileQuickActions />
         </div>
 

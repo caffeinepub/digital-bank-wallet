@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-rebuild-the-dashboard-page-to-match-the-mobile-banking-layout-shown-in-the-reference-image-a-sticky-top-bar-with-a-hamburger-menu-icon-on-the-left-bluestone-bank-branding-text-with-the-tagline-solid-foundation-secure-funds-centered-beneath-it-and-a-notification-bell-icon-with-a-red-badge-count-on-the-right-the-top-bar-background-should-use-the-existing-dark-navy-blue-theme",
-      "featureTitle": "Rebuild the Dashboard page to match the mobile banking layout shown in the reference image: a sticky top bar with a hamburger menu icon on the left, 'Bluestone Bank' branding text with the tagline 'Solid Foundation, Secure Funds' centered beneath it, and a notification bell icon with a red badge count on the right. The top bar background should use the existing dark navy/blue theme.",
+      "featureId": "feature-remove-the-bank-logo-image-from-the-top-right-corner-of-the-debitcard-component-and-restore-the-original-content-that-was-displayed-in-that-area-before-the-logo-was-added-e-g-the-bank-name-text-or-any-other-original-branding-element",
+      "featureTitle": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added (e.g., the bank name text or any other original branding element).",
       "files": [
-        "frontend/src/components/MobileTopBar.tsx",
-        "frontend/src/pages/Dashboard.tsx"
+        "frontend/src/components/DebitCard.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,105 +17,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-hero-balance-card-directly-below-the-top-bar-the-card-should-display-a-personalized-greeting-such-as-hello-user-name-a-your-balance-label-with-the-live-balance-amount-in-large-bold-text-fetched-from-the-backend-and-an-available-balance-label-below-it-style-the-card-with-a-blue-gradient-background-matching-the-reference-image",
-      "featureTitle": "Add a hero balance card directly below the top bar. The card should display a personalized greeting such as 'Hello, [User Name]', a 'Your Balance' label with the live balance amount in large bold text fetched from the backend, and an 'Available Balance' label below it. Style the card with a blue gradient background matching the reference image.",
-      "files": [
-        "frontend/src/components/MobileBalanceCard.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-horizontal-row-of-four-circular-quick-action-buttons-below-the-balance-card-transfer-deposit-withdraw-and-pay-bills-each-button-should-have-a-white-circular-icon-background-and-a-label-below-it-tapping-transfer-deposit-or-withdraw-navigates-to-the-respective-existing-page-routes-pay-bills-shows-a-coming-soon-toast-lay-them-out-evenly-spaced-in-a-single-row",
-      "featureTitle": "Add a horizontal row of four circular quick-action buttons below the balance card: Transfer, Deposit, Withdraw, and Pay Bills. Each button should have a white circular icon background and a label below it. Tapping Transfer, Deposit, or Withdraw navigates to the respective existing page routes. Pay Bills shows a Coming Soon toast. Lay them out evenly spaced in a single row.",
-      "files": [
-        "frontend/src/components/MobileQuickActions.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-recent-transactions-section-below-the-quick-actions-it-should-display-up-to-5-of-the-most-recent-transactions-each-showing-a-category-icon-transaction-name-relative-date-such-as-yesterday-or-2-days-ago-and-the-amount-right-aligned-positive-amounts-are-shown-in-green-with-a-plus-prefix-and-negative-amounts-in-red-with-a-minus-prefix-use-the-existing-usetransactions-hook-to-fetch-data-show-skeleton-loaders-while-loading-and-an-empty-state-if-no-transactions-exist",
-      "featureTitle": "Add a Recent Transactions section below the quick actions. It should display up to 5 of the most recent transactions, each showing a category icon, transaction name, relative date such as Yesterday or 2 Days Ago, and the amount right-aligned. Positive amounts are shown in green with a plus prefix and negative amounts in red with a minus prefix. Use the existing useTransactions hook to fetch data. Show skeleton loaders while loading and an empty state if no transactions exist.",
-      "files": [
-        "frontend/src/components/MobileRecentTransactions.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-fixed-bottom-navigation-bar-with-four-tabs-home-with-a-house-icon-accounts-with-a-card-icon-payments-with-a-dollar-icon-and-more-with-a-three-dot-icon-the-active-tab-should-be-highlighted-in-white-or-accent-color-the-home-tab-navigates-to-the-dashboard-accounts-and-payments-tabs-show-a-coming-soon-toast-if-no-dedicated-route-exists-the-bottom-nav-must-not-overlap-main-content",
-      "featureTitle": "Add a fixed bottom navigation bar with four tabs: Home with a house icon, Accounts with a card icon, Payments with a dollar icon, and More with a three-dot icon. The active tab should be highlighted in white or accent color. The Home tab navigates to the dashboard. Accounts and Payments tabs show a Coming Soon toast if no dedicated route exists. The bottom nav must not overlap main content.",
-      "files": [
-        "frontend/src/components/MobileBottomNav.tsx",
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-dashboard-page-to-use-a-mobile-first-self-contained-layout-without-the-generic-layout-header-and-footer-wrapper-the-page-should-be-max-width-constrained-and-centered-the-top-section-containing-the-top-bar-and-balance-card-uses-a-blue-navy-background-the-content-section-below-uses-a-white-or-light-grey-background-with-rounded-top-corners-matching-the-card-on-blue-header-style-from-the-reference-image",
-      "featureTitle": "Update the Dashboard page to use a mobile-first self-contained layout without the generic Layout header and footer wrapper. The page should be max-width constrained and centered. The top section containing the top bar and balance card uses a blue/navy background. The content section below uses a white or light grey background with rounded top corners, matching the card-on-blue-header style from the reference image.",
-      "files": [
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
       ],
       "confidence": "high"
     }

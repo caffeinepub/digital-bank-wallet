@@ -1,89 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-24T22:47:45.546Z",
+  "generatedAt": "2026-02-25T00:44:48.938Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 6,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Rebuild the Dashboard page to match the mobile banking layout shown in the reference image: a sticky top bar with a hamburger menu icon on the left, 'Bluestone Bank' branding text with the tagline 'Solid Foundation, Secure Funds' centered beneath it, and a notification bell icon with a red badge count on the right. The top bar background should use the existing dark navy/blue theme.",
+        "summary": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added (e.g., the bank name text or any other original branding element).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/MobileTopBar.tsx",
-          "frontend/src/pages/Dashboard.tsx"
+          "frontend/src/components/DebitCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/MobileTopBar.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Add a hero balance card directly below the top bar. The card should display a personalized greeting such as 'Hello, [User Name]', a 'Your Balance' label with the live balance amount in large bold text fetched from the backend, and an 'Available Balance' label below it. Style the card with a blue gradient background matching the reference image.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MobileBalanceCard.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MobileBalanceCard.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Add a horizontal row of four circular quick-action buttons below the balance card: Transfer, Deposit, Withdraw, and Pay Bills. Each button should have a white circular icon background and a label below it. Tapping Transfer, Deposit, or Withdraw navigates to the respective existing page routes. Pay Bills shows a Coming Soon toast. Lay them out evenly spaced in a single row.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MobileQuickActions.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MobileQuickActions.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add a Recent Transactions section below the quick actions. It should display up to 5 of the most recent transactions, each showing a category icon, transaction name, relative date such as Yesterday or 2 Days Ago, and the amount right-aligned. Positive amounts are shown in green with a plus prefix and negative amounts in red with a minus prefix. Use the existing useTransactions hook to fetch data. Show skeleton loaders while loading and an empty state if no transactions exist.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MobileRecentTransactions.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MobileRecentTransactions.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add a fixed bottom navigation bar with four tabs: Home with a house icon, Accounts with a card icon, Payments with a dollar icon, and More with a three-dot icon. The active tab should be highlighted in white or accent color. The Home tab navigates to the dashboard. Accounts and Payments tabs show a Coming Soon toast if no dedicated route exists. The bottom nav must not overlap main content.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/MobileBottomNav.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/MobileBottomNav.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Update the Dashboard page to use a mobile-first self-contained layout without the generic Layout header and footer wrapper. The page should be max-width constrained and centered. The top section containing the top bar and balance card uses a blue/navy background. The content section below uses a white or light grey background with rounded top corners, matching the card-on-blue-header style from the reference image.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Dashboard.tsx"
+          "frontend/src/components/DebitCard.tsx"
         ]
       }
     ]
@@ -93,12 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/MobileBalanceCard.tsx",
-    "frontend/src/components/MobileBottomNav.tsx",
-    "frontend/src/components/MobileQuickActions.tsx",
-    "frontend/src/components/MobileRecentTransactions.tsx",
-    "frontend/src/components/MobileTopBar.tsx",
-    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/components/DebitCard.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

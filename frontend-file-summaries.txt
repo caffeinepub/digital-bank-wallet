@@ -3,7 +3,7 @@
   "frontend/src/components/Layout.tsx": "Updated app layout with dark navy header and footer matching BlueStone Bank branding, gold accent nav highlights, white text on dark background, and gold heart in footer attribution.",
   "frontend/src/components/LoginButton.tsx": "Authentication button component that handles Internet Identity login/logout with loading states.",
   "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog for first-time user profile setup that prompts for name, email, and password with validation, saves to backend, and displays BlueStone Bank welcome message.",
-  "frontend/src/pages/Dashboard.tsx": "Rebuilt mobile-first dashboard page without the generic Layout wrapper, featuring a blue gradient header section containing MobileTopBar, MobileBalanceCard, and MobileQuickActions, followed by a white rounded content section with MobileRecentTransactions, and a fixed MobileBottomNav at the bottom.",
+  "frontend/src/pages/Dashboard.tsx": "Mobile-first dashboard page that now renders the new DebitCard component directly below MobileBalanceCard inside the blue gradient header section, with all other layout unchanged.",
   "frontend/src/pages/DepositPage.tsx": "Deposit page wrapper component with navigation and form layout.",
   "frontend/src/pages/WithdrawPage.tsx": "Withdrawal page wrapper component with navigation and form layout.",
   "frontend/src/pages/TransferPage.tsx": "Transfer page wrapper component with navigation and form layout.",
@@ -18,8 +18,8 @@
   "frontend/src/components/TransactionTable.tsx": "Responsive table component displaying transaction history with type icons, badges, and color-coded amounts.",
   "frontend/src/components/TransactionFilters.tsx": "Filter controls component with dropdowns for transaction type filtering and sorting options.",
   "frontend/src/hooks/useUserProfile.ts": "React Query hooks for fetching and saving user profile data with proper loading state management.",
-  "frontend/src/hooks/useBalance.ts": "React Query hook for fetching wallet balance from backend.",
-  "frontend/src/hooks/useTransactions.ts": "React Query hook for fetching transaction history from backend.",
+  "frontend/src/hooks/useBalance.ts": "React Query hook for fetching wallet balance from backend, with graceful fallback to a mock balance of $182,679.00 (18267900n cents) when the actor is unavailable or the backend call fails.",
+  "frontend/src/hooks/useTransactions.ts": "React Query hook for fetching transaction history from backend, with graceful fallback to 6 realistic mock transactions (salary, rent, investment returns, utility bills, business transfer, savings transfer) consistent with a balance of $182,679.00.",
   "frontend/src/hooks/useQueries.ts": "React Query mutation hooks for account initialization, deposit, withdraw, and transfer operations with cache invalidation.",
   "frontend/src/hooks/useFilteredTransactions.ts": "Custom hook managing transaction filtering by type and sorting by date or amount.",
   "frontend/src/utils/validation.ts": "Validation utility functions for amount, Principal ID, and email format validation with appropriate error messages.",
@@ -30,8 +30,9 @@
   "frontend/src/components/VirtualCard.tsx": "New interactive virtual debit card component with 3D CSS flip animation, front face showing masked PAN/chip/cardholder name/expiry, and back face showing CVV strip and customer service info, using BlueStone Bank navy/gold theme.",
   "frontend/src/components/AccountsOverview.tsx": "New component displaying Checking (live backend data) and Savings (dummy data) account cards in a responsive grid with navy gradient styling and masked account numbers.",
   "frontend/src/components/MobileTopBar.tsx": "Sticky mobile top bar with hamburger menu icon on the left, centered \"Bluestone Bank\" brand name with \"Solid Foundation, Secure Funds\" tagline beneath it, and a notification bell with a red numeric badge on the right, styled with a semi-transparent white overlay on the navy background.",
-  "frontend/src/components/MobileBalanceCard.tsx": "Hero balance card component displaying a personalized greeting using the user's profile name, a \"Your Balance\" label with the live balance amount in large bold text fetched from the backend, and an \"Available Balance\" label below, with skeleton loading states.",
+  "frontend/src/components/MobileBalanceCard.tsx": "Compact hero balance card with a show/hide toggle button (eye/eye-off icon) beside the balance amount, personalized greeting, and live balance display; toggle state is managed independently via useState.",
   "frontend/src/components/MobileQuickActions.tsx": "Horizontal row of four circular quick-action buttons (Transfer, Deposit, Withdraw, Pay Bills) with white circular backgrounds and navy icons; Transfer/Deposit/Withdraw navigate to their respective routes while Pay Bills shows a Coming Soon toast.",
   "frontend/src/components/MobileRecentTransactions.tsx": "Recent transactions section with a bold heading and \"View All\" link, displaying up to 5 most recent transactions with type-specific colored icons, relative dates, and color-coded amounts (green for credits, red for debits), with skeleton loaders and an empty state.",
-  "frontend/src/components/MobileBottomNav.tsx": "Fixed bottom navigation bar with four tabs (Home, Accounts, Payments, More) each with an icon and label; Home navigates to the dashboard route while other tabs show a Coming Soon toast, with active tab highlighted in gold."
+  "frontend/src/components/MobileBottomNav.tsx": "Fixed bottom navigation bar with four tabs (Home, Accounts, Payments, More) each with an icon and label; Home navigates to the dashboard route while other tabs show a Coming Soon toast, with active tab highlighted in gold.",
+  "frontend/src/components/DebitCard.tsx": "Bluestone Bank debit card component with navy/blue gradient styling, EMV chip, text-based \"BlueStone BANK\" branding in the top right corner (gold accent for \"BANK\"), cardholder name, expiry, and a Show/Hide toggle button next to the card number that masks it by default and reveals the full number on click."
 }

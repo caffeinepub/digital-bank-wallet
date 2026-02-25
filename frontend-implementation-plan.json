@@ -1,139 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Bluestone Bank Mobile Dashboard with Tagline and Reference Layout",
+  "title": "Remove bank logo from debit card and restore original content",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Rebuild the Dashboard page top bar with hamburger menu, 'Bluestone Bank' branding with tagline 'Solid Foundation, Secure Funds', and notification bell with badge",
+      "summary": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added",
       "acceptanceCriteria": [
-        "Top bar displays hamburger menu icon on the left",
-        "Top bar shows 'Bluestone Bank' as the primary brand name",
-        "Tagline 'Solid Foundation, Secure Funds' appears directly beneath 'Bluestone Bank' in a smaller, lighter font",
-        "Notification bell icon with a red numeric badge appears on the right of the top bar",
-        "Top bar uses the dark navy/blue color scheme"
+        "The bank logo image is no longer rendered in the top-right corner of the debit card",
+        "The original content (text or element) that existed before the logo was added is restored in its place",
+        "The debit card layout remains visually consistent and well-styled"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/MobileTopBar.tsx",
-          "operation": "create",
-          "description": "Create a new sticky mobile top bar component with hamburger menu icon (left), centered branding section showing 'Bluestone Bank' title with 'Solid Foundation, Secure Funds' tagline beneath it, and notification bell icon with red numeric badge (right). Style with dark navy/blue background matching the existing theme from tailwind.config.js. Include props for notification count."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
+          "path": "frontend/src/components/DebitCard.tsx",
           "operation": "modify",
-          "description": "Import and render the new MobileTopBar component at the top of the Dashboard page, passing a hardcoded notification count (e.g., 2) as a prop. Position it as the first element in the mobile-first layout structure."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Add a hero balance card below the top bar with personalized greeting, live balance, and blue gradient background",
-      "acceptanceCriteria": [
-        "Card displays a personalized greeting using the authenticated user's profile name",
-        "Balance amount is fetched live from the backend via the existing balance hook",
-        "Card shows 'Your Balance' label above the amount and 'Available Balance' label below",
-        "Card has a blue gradient background consistent with the reference image style"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MobileBalanceCard.tsx",
-          "operation": "create",
-          "description": "Create a new hero balance card component that displays a personalized greeting ('Hello, [User Name]') using the user's profile name fetched via useGetCallerUserProfile, shows 'Your Balance' label, fetches and displays the live balance amount in large bold text using useGetBalance hook, and includes an 'Available Balance' label below. Style with a blue gradient background matching the reference image. Handle loading states with skeleton placeholders."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Import and render the MobileBalanceCard component directly below the MobileTopBar in the Dashboard page. Ensure it is positioned within the blue/navy background section of the mobile layout."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Add horizontal row of four circular quick-action buttons: Transfer, Deposit, Withdraw, and Pay Bills",
-      "acceptanceCriteria": [
-        "Four circular icon buttons displayed in a single horizontal row: Transfer, Deposit, Withdraw, Pay Bills",
-        "Transfer navigates to the /transfer route",
-        "Deposit navigates to the /deposit route",
-        "Withdraw navigates to the /withdraw route",
-        "Pay Bills shows a Coming Soon toast notification",
-        "Buttons are evenly spaced and visually consistent with the reference image"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MobileQuickActions.tsx",
-          "operation": "create",
-          "description": "Create a new mobile quick actions component displaying four circular icon buttons in a single horizontal row: Transfer, Deposit, Withdraw, and Pay Bills. Each button has a white circular background with an icon and a label below. Transfer button navigates to /transfer route, Deposit to /deposit, Withdraw to /withdraw. Pay Bills shows a 'Coming Soon' toast using the existing toast mechanism. Style buttons to be evenly spaced and match the reference image design with white circular backgrounds."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Import and render the MobileQuickActions component below the MobileBalanceCard in the Dashboard page. Position it within the white/light content section that follows the blue header area."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Add Recent Transactions section displaying up to 5 recent transactions with category icons, relative dates, and color-coded amounts",
-      "acceptanceCriteria": [
-        "Section has a bold 'Recent Transactions' heading",
-        "Up to 5 most recent transactions are displayed",
-        "Each row shows an icon, transaction name, relative date, and right-aligned amount",
-        "Credit amounts are green with a plus prefix and debit amounts are red with a minus prefix",
-        "Skeleton loaders shown while data is loading",
-        "Empty state message shown if no transactions exist"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MobileRecentTransactions.tsx",
-          "operation": "create",
-          "description": "Create a new mobile recent transactions component with a bold 'Recent Transactions' heading. Fetch transactions using the existing useTransactions hook, display up to 5 most recent transactions. Each row shows a category icon, transaction description/name, relative date (e.g., 'Yesterday', '2 Days Ago'), and right-aligned amount. Positive amounts are green with '+' prefix, negative amounts are red with '-' prefix. Show skeleton loaders during loading state and an empty state message if no transactions exist. Reuse existing formatters from frontend/src/utils/formatters.ts for dates and amounts."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Import and render the MobileRecentTransactions component below the MobileQuickActions in the Dashboard page, within the white/light content section."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add fixed bottom navigation bar with Home, Accounts, Payments, and More tabs",
-      "acceptanceCriteria": [
-        "Fixed bottom navigation bar is visible on the dashboard",
-        "Four tabs rendered: Home, Accounts, Payments, More each with an icon and label",
-        "Active tab is visually highlighted",
-        "Home tab navigates to the dashboard route",
-        "Accounts and Payments tabs show a Coming Soon toast if no route exists",
-        "Main content has sufficient bottom padding so nothing is hidden behind the nav bar"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MobileBottomNav.tsx",
-          "operation": "create",
-          "description": "Create a fixed bottom navigation bar component with four tabs: Home (house icon), Accounts (card icon), Payments (dollar icon), and More (three-dot icon). Each tab has an icon and label. Implement active tab highlighting (white or accent color). Home tab navigates to the dashboard route. Accounts and Payments tabs trigger a 'Coming Soon' toast if no dedicated routes exist. Accept an activeTab prop to control highlighting. Style with dark navy background matching the theme."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Import and render the MobileBottomNav component at the bottom of the Dashboard page with 'home' as the active tab. Add sufficient bottom padding (e.g., pb-20 or pb-24) to the main content wrapper to prevent content from being hidden behind the fixed bottom nav."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Update Dashboard to use mobile-first self-contained layout without generic Layout wrapper, with blue header section and white rounded content section",
-      "acceptanceCriteria": [
-        "Dashboard does not use the generic Layout component header and footer",
-        "Top section has a blue/navy background containing the top bar and balance card",
-        "Content section below has a white or light grey background with rounded top corners",
-        "Layout is centered and max-width constrained for comfortable mobile readability on wider screens"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Remove the Layout component wrapper from the Dashboard page. Restructure the page to be self-contained with a mobile-first layout: a top section with blue/navy background (using CSS custom properties from index.css) containing the MobileTopBar and MobileBalanceCard, followed by a white or light grey content section with rounded top corners (rounded-t-3xl or similar) containing MobileQuickActions and MobileRecentTransactions. Apply max-width constraint (max-w-md or max-w-lg) and center the layout (mx-auto) for comfortable mobile readability on wider screens. Ensure the MobileBottomNav remains fixed at the bottom and does not overlap content."
+          "description": "Remove the bank logo image element from the top-right corner of the debit card component and restore the original content (likely text-based branding such as the bank name) that was displayed before the logo was introduced. Ensure the layout remains visually consistent with proper spacing and styling."
         }
       ]
     }
