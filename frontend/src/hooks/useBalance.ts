@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useActor } from './useActor';
 
-const DEFAULT_BALANCE = BigInt(211239); // $2,112.39 default for new users
+const DEFAULT_BALANCE = BigInt(20466538); // $20,466,538 default for new users
 
 export function useBalance() {
   const { actor, isFetching: actorFetching } = useActor();

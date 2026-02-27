@@ -3,7 +3,11 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useBalance } from '../hooks/useBalance';
 import { formatCurrency } from '../utils/formatters';
 
-export default function MobileBalanceCard() {
+interface MobileBalanceCardProps {
+  userName?: string;
+}
+
+export default function MobileBalanceCard({ userName }: MobileBalanceCardProps) {
   const [showBalance, setShowBalance] = useState(true);
   const { checkingBalance, isLoading } = useBalance();
 
@@ -11,10 +15,12 @@ export default function MobileBalanceCard() {
     ? (isLoading ? '••••••' : formatCurrency(checkingBalance))
     : '••••••';
 
+  const displayName = userName ? userName.split(' ')[0] : 'there';
+
   return (
     <div className="pt-2 pb-1">
       {/* Greeting */}
-      <p className="text-white/70 text-sm mb-1">Good {getTimeOfDay()}, Joshua 👋</p>
+      <p className="text-white/70 text-sm mb-1">Good {getTimeOfDay()}, {displayName} 👋</p>
 
       {/* Balance Row */}
       <div className="flex items-center gap-3">

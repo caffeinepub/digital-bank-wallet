@@ -1,20 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update default starting balance to 211,239",
+  "title": "Update demo user credentials to bryanbarton45@gmail.com / alinalaura@24",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available",
+      "id": "REQ-1",
+      "summary": "Update the pre-seeded demo user credentials in useEmailPasswordAuth.ts to email 'bryanbarton45@gmail.com' and password 'alinalaura@24', removing any previously seeded demo credentials",
       "acceptanceCriteria": [
-        "The useBalance hook returns 211239 as the default value when no balance data has been fetched yet.",
-        "The dashboard and balance card display 211,239 as the starting balance for new users."
+        "Navigating to the login page and entering email 'bryanbarton45@gmail.com' with password 'alinalaura@24' results in a successful login.",
+        "The previously seeded demo email (if different) no longer grants access.",
+        "Incorrect email or password still shows an appropriate error message."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useBalance.ts",
+          "path": "frontend/src/hooks/useEmailPasswordAuth.ts",
           "operation": "modify",
-          "description": "Change the default balance value returned by the useBalance hook from 1000 (representing $10.00) to 211239 (representing $2,112.39). Update the fallback value in the hook's return statement to ensure that when no balance data is available from the backend, the UI displays 211,239 as the starting balance."
+          "description": "Update the pre-seeded demo user credentials in the authentication hook. Change the demo user email to 'bryanbarton45@gmail.com' and update the password hash to match 'alinalaura@24'. Remove or replace any existing demo credentials that differ from these values. Ensure the djb2 hash function is applied to the new password for validation. Do not modify any other user data (name, balance, transactions) or change the authentication logic itself."
         }
       ]
     }

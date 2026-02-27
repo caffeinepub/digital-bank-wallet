@@ -10,6 +10,8 @@ interface BalanceCardProps {
 export default function BalanceCard({ balance, userName }: BalanceCardProps) {
   const [showBalance, setShowBalance] = useState(true);
 
+  const displayName = userName ? userName : undefined;
+
   return (
     <div
       className="relative rounded-3xl overflow-hidden p-6 md:p-8"
@@ -30,7 +32,7 @@ export default function BalanceCard({ balance, userName }: BalanceCardProps) {
         <div className="flex items-start justify-between mb-6">
           <div>
             <p className="text-white/60 text-sm font-medium tracking-wide uppercase">
-              {userName ? `Welcome, ${userName}` : 'Total Balance'}
+              {displayName ? `Welcome, ${displayName}` : 'Total Balance'}
             </p>
             <p className="text-white/40 text-xs mt-0.5">Checking Account</p>
           </div>

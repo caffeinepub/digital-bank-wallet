@@ -1,4 +1,4 @@
-import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
+import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
@@ -10,22 +10,71 @@ import TransferPage from './pages/TransferPage';
 import TransactionHistory from './pages/TransactionHistory';
 import AccountsPage from './pages/AccountsPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import {
+  loadSession,
+  clearSession,
+  type EmailPasswordUser,
+} from './hooks/useEmailPasswordAuth';
 
 const queryClient = new QueryClient();
 
-// Auth context
-const TEMP_EMAIL = 'adelekejoshua436@gmail.com';
-const TEMP_PASSWORD = 'Adeleke@24';
-const SESSION_KEY = 'bluestone_session';
+// ─── Route components ────────────────────────────────────────────────────────
 
-function getSession(): boolean {
-  return localStorage.getItem(SESSION_KEY) === 'true';
+function AppRoot() {
+  const [currentUser, setCurrentUser] = useState<EmailPasswordUser | null>(() => loadSession());
+
+  const handleLoginSuccess = (user: EmailPasswordUser) => {
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    clearSession();
+    setCurrentUser(null);
+    queryClient.clear();
+  };
+
+  if (!currentUser) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  return <Dashboard onLogout={handleLogout} currentUser={currentUser} />;
 }
 
-function setSession(val: boolean) {
-  if (val) localStorage.setItem(SESSION_KEY, 'true');
-  else localStorage.removeItem(SESSION_KEY);
+function RegisterRoute() {
+  const navigate = useNavigate();
+  return (
+    <RegisterPage
+      onSuccess={() => navigate({ to: '/login' })}
+      onGoToLogin={() => navigate({ to: '/login' })}
+    />
+  );
 }
+
+function LoginRoute() {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<EmailPasswordUser | null>(() => loadSession());
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate({ to: '/' });
+    }
+  }, [currentUser, navigate]);
+
+  const handleLoginSuccess = (user: EmailPasswordUser) => {
+    setCurrentUser(user);
+    navigate({ to: '/' });
+  };
+
+  return (
+    <LoginPage
+      onLoginSuccess={handleLoginSuccess}
+      onGoToRegister={() => navigate({ to: '/register' })}
+    />
+  );
+}
+
+// ─── Router setup ─────────────────────────────────────────────────────────────
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -35,6 +84,18 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: AppRoot,
+});
+
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginRoute,
+});
+
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/register',
+  component: RegisterRoute,
 });
 
 const depositRoute = createRoute({
@@ -69,6 +130,8 @@ const accountsRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  loginRoute,
+  registerRoute,
   depositRoute,
   withdrawRoute,
   transferRoute,
@@ -77,50 +140,6 @@ const routeTree = rootRoute.addChildren([
 ]);
 
 const router = createRouter({ routeTree });
-
-function AppRoot() {
-  const [isAuthenticated, setIsAuthenticated] = useState(getSession());
-  const [loginError, setLoginError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
-    setLoginError('');
-    await new Promise(r => setTimeout(r, 600));
-    if (email === TEMP_EMAIL && password === TEMP_PASSWORD) {
-      setSession(true);
-      setIsAuthenticated(true);
-    } else {
-      setLoginError('Invalid email or password. Please try again.');
-    }
-    setIsLoggingIn(false);
-  };
-
-  const handleLogout = () => {
-    setSession(false);
-    setIsAuthenticated(false);
-    queryClient.clear();
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <LoginPage
-        email={email}
-        password={password}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onSubmit={handleLogin}
-        isLoggingIn={isLoggingIn}
-        loginError={loginError}
-      />
-    );
-  }
-
-  return <Dashboard onLogout={handleLogout} />;
-}
 
 export default function App() {
   return (

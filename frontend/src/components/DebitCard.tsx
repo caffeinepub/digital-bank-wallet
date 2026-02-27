@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
-export default function DebitCard() {
+interface DebitCardProps {
+  cardholderName?: string;
+}
+
+export default function DebitCard({ cardholderName }: DebitCardProps) {
   const [showNumber, setShowNumber] = useState(false);
 
   const maskedNumber = '•••• •••• •••• 4821';
   const fullNumber = '4532 8821 6543 4821';
+
+  const displayName = cardholderName
+    ? cardholderName.toUpperCase()
+    : 'CARD HOLDER';
 
   return (
     <div className="relative w-full rounded-2xl overflow-hidden shadow-card"
@@ -58,7 +66,7 @@ export default function DebitCard() {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-white/50 text-[9px] uppercase tracking-wider mb-0.5">Card Holder</p>
-            <p className="text-white text-sm font-semibold tracking-wide">JOSHUA ADELEKE</p>
+            <p className="text-white text-sm font-semibold tracking-wide">{displayName}</p>
           </div>
           <div className="text-right">
             <p className="text-white/50 text-[9px] uppercase tracking-wider mb-0.5">Expires</p>

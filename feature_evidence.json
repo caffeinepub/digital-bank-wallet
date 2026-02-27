@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-fallback-default-balance-value-in-the-usebalance-hook-from-1000-to-211239-so-that-the-ui-reflects-the-correct-default-when-no-backend-data-is-available",
-      "featureTitle": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available.",
+      "featureId": "feature-update-the-pre-seeded-demo-user-in-the-email-password-authentication-hook-useemailpasswordauth-ts-so-that-the-demo-account-email-is-bryanbarton45-gmail-com-and-the-password-is-alinalaura-24-remove-or-replace-any-previously-seeded-demo-credentials-that-differ-from-these-values",
+      "featureTitle": "Update the pre-seeded demo user in the email/password authentication hook (useEmailPasswordAuth.ts) so that the demo account email is 'bryanbarton45@gmail.com' and the password is 'alinalaura@24'. Remove or replace any previously seeded demo credentials that differ from these values.",
       "files": [
-        "frontend/src/hooks/useBalance.ts"
+        "frontend/src/hooks/useEmailPasswordAuth.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,7 +16,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-1"
       ],
       "confidence": "high"
     }

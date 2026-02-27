@@ -4,9 +4,10 @@ import { toast } from 'sonner';
 
 interface MobileTopBarProps {
   onLogout?: () => void;
+  userName?: string;
 }
 
-export default function MobileTopBar({ onLogout }: MobileTopBarProps) {
+export default function MobileTopBar({ onLogout, userName }: MobileTopBarProps) {
   return (
     <header className="bg-chase-navy px-4 py-3 flex items-center justify-between sticky top-0 z-20">
       {/* Left: Menu */}
@@ -23,7 +24,11 @@ export default function MobileTopBar({ onLogout }: MobileTopBarProps) {
         <span className="text-white font-bold text-base tracking-widest uppercase">
           BlueStone <span className="text-chase-gold">Bank</span>
         </span>
-        <span className="text-white/50 text-[9px] tracking-wider uppercase">Solid Foundation, Secure Funds</span>
+        {userName ? (
+          <span className="text-white/60 text-[9px] tracking-wider">Welcome, {userName}</span>
+        ) : (
+          <span className="text-white/50 text-[9px] tracking-wider uppercase">Solid Foundation, Secure Funds</span>
+        )}
       </div>
 
       {/* Right: Bell + Logout */}

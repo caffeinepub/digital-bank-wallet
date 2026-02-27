@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { loginWithEmailPassword, type EmailPasswordUser } from '../hooks/useEmailPasswordAuth';
 
 interface LoginPageProps {
-  email: string;
-  password: string;
-  onEmailChange: (v: string) => void;
-  onPasswordChange: (v: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  isLoggingIn: boolean;
-  loginError: string;
+  onLoginSuccess: (user: EmailPasswordUser) => void;
+  onGoToRegister?: () => void;
 }
 
-export default function LoginPage({
-  email,
-  password,
-  onEmailChange,
-  onPasswordChange,
-  onSubmit,
-  isLoggingIn,
-  loginError,
-}: LoginPageProps) {
+export default function LoginPage({ onLoginSuccess, onGoToRegister }: LoginPageProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError('');
+
+    // Small delay for UX
+    await new Promise(r => setTimeout(r, 400));
+
+    const result = loginWithEmailPassword(email, password);
+    if (result.success) {
+      onLoginSuccess(result.user);
+    } else {
+      setLoginError(result.error);
+    }
+    setIsLoggingIn(false);
+  };
+
   return (
     <div className="min-h-screen bg-chase-bg flex flex-col">
       {/* Header */}
@@ -36,13 +46,13 @@ export default function LoginPage({
             <h1 className="text-2xl font-bold text-chase-navy mb-1">Sign In</h1>
             <p className="text-chase-muted text-sm mb-6">Access your BlueStone Bank account</p>
 
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-chase-navy mb-1">Email Address</label>
                 <input
                   type="email"
                   value={email}
-                  onChange={e => onEmailChange(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   className="w-full border border-chase-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
                   placeholder="Enter your email"
                   required
@@ -54,7 +64,7 @@ export default function LoginPage({
                 <input
                   type="password"
                   value={password}
-                  onChange={e => onPasswordChange(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   className="w-full border border-chase-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
                   placeholder="Enter your password"
                   required
@@ -85,7 +95,21 @@ export default function LoginPage({
               </button>
             </form>
 
-            <p className="text-center text-xs text-chase-muted mt-6">
+            {/* Register link */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-chase-muted">
+                Don't have an account?{' '}
+                <button
+                  type="button"
+                  onClick={onGoToRegister}
+                  className="text-chase-navy font-semibold hover:underline focus:outline-none"
+                >
+                  Create Account
+                </button>
+              </p>
+            </div>
+
+            <p className="text-center text-xs text-chase-muted mt-4">
               Protected by 256-bit SSL encryption
             </p>
           </div>

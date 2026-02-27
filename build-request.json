@@ -1,49 +1,36 @@
 {
   "kind": "build_request",
-  "title": "Update default starting balance to 211,239",
-  "priority": "normal",
+  "title": "Update demo user credentials to bryanbarton45@gmail.com / alinalaura@24",
+  "projectName": "BlueStone Bank",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the default starting balance for new user accounts in the backend from 1000 to 211239.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "make it 211239"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When a new user account is created, their initial balance is 211239 (not 1000).",
-        "Existing accounts are not affected by this change."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available.",
+      "text": "Update the pre-seeded demo user in the email/password authentication hook (useEmailPasswordAuth.ts) so that the demo account email is 'bryanbarton45@gmail.com' and the password is 'alinalaura@24'. Remove or replace any previously seeded demo credentials that differ from these values.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-6"
         ],
         "quotes": [
-          "make it 211239"
+          "lets make the email address bryanbarton45@gmail.com and the password should be alinalaura@24"
         ]
       },
       "acceptanceCriteria": [
-        "The useBalance hook returns 211239 as the default value when no balance data has been fetched yet.",
-        "The dashboard and balance card display 211,239 as the starting balance for new users."
+        "Navigating to the login page and entering email 'bryanbarton45@gmail.com' with password 'alinalaura@24' results in a successful login.",
+        "The previously seeded demo email (if different) no longer grants access.",
+        "Incorrect email or password still shows an appropriate error message."
       ]
     }
   ],
   "constraints": [
-    "Do not alter any existing user balances already stored in the canister."
+    "Do not modify any files listed under frontend.immutablePaths.",
+    "Do not change any other demo user data (name, balance, transactions) beyond the email and password credentials."
   ],
   "nonGoals": [
-    "Changing any other default values or account settings.",
-    "Modifying transaction history or any other backend logic."
+    "Adding a new registration flow or changing registration logic.",
+    "Modifying backend authentication or Motoko actor.",
+    "Changing any other user's credentials."
   ],
   "imageRequirements": {
     "required": [],
