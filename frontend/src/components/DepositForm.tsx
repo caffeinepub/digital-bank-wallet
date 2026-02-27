@@ -1,102 +1,122 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState } from 'react';
+import { DollarSign, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { useDeposit } from '../hooks/useQueries';
 import { validateAmount } from '../utils/validation';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { useNavigate } from '@tanstack/react-router';
 import TransactionConfirmationDialog from './TransactionConfirmationDialog';
 
-export default function DepositForm() {
+interface DepositFormProps {
+  onSuccess?: () => void;
+}
+
+export default function DepositForm({ onSuccess }: DepositFormProps) {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const deposit = useDeposit();
-  const navigate = useNavigate();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [amountError, setAmountError] = useState('');
+
+  const { mutate: deposit, isPending } = useDeposit();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const validation = validateAmount(amount);
-    if (!validation.isValid) {
-      toast.error(validation.error);
-      return;
-    }
-
-    setShowConfirmation(true);
+    const err = validateAmount(amount);
+    if (err) { setAmountError(err); return; }
+    setAmountError('');
+    setShowConfirm(true);
   };
 
-  const handleConfirm = async () => {
-    try {
-      await deposit.mutateAsync({
-        amount: BigInt(Math.floor(parseFloat(amount) * 100)),
-        description: description.trim() || 'Deposit',
-      });
-      toast.success('Deposit successful!');
-      setAmount('');
-      setDescription('');
-      setShowConfirmation(false);
-      navigate({ to: '/' });
-    } catch (error: any) {
-      toast.error(error.message || 'Deposit failed. Please try again.');
-      setShowConfirmation(false);
-    }
+  const handleConfirm = () => {
+    const cents = Math.round(parseFloat(amount) * 100);
+    deposit(
+      { amount: BigInt(cents) },
+      {
+        onSuccess: () => {
+          toast.success('Deposit successful!', {
+            description: `$${parseFloat(amount).toFixed(2)} has been added to your account.`,
+          });
+          setShowConfirm(false);
+          setAmount('');
+          setDescription('');
+          onSuccess?.();
+        },
+        onError: (err: any) => {
+          toast.error('Deposit failed', {
+            description: err?.message || 'Please try again.',
+          });
+          setShowConfirm(false);
+        },
+      }
+    );
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="amount">Amount</Label>
-          <Input
-            id="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            disabled={deposit.isPending}
-            required
-          />
-          <p className="text-xs text-muted-foreground">Enter the amount you want to deposit</p>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Amount */}
+        <div>
+          <label className="block text-sm font-semibold text-chase-navy mb-2">Amount</label>
+          <div className="relative">
+            <DollarSign size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-chase-muted" />
+            <input
+              type="number"
+              value={amount}
+              onChange={e => { setAmount(e.target.value); setAmountError(''); }}
+              className="w-full border border-chase-border rounded-xl pl-9 pr-4 py-3.5 text-chase-navy text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+            />
+          </div>
+          {amountError && <p className="text-red-500 text-xs mt-1">{amountError}</p>}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="description">Description (Optional)</Label>
-          <Textarea
-            id="description"
-            placeholder="Add a note about this deposit"
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-semibold text-chase-navy mb-2">Description (optional)</label>
+          <input
+            type="text"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={deposit.isPending}
-            rows={3}
+            onChange={e => setDescription(e.target.value)}
+            className="w-full border border-chase-border rounded-xl px-4 py-3 text-chase-navy text-sm focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
+            placeholder="e.g. Paycheck, Transfer from savings..."
+            maxLength={100}
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={deposit.isPending}>
-          {deposit.isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            'Continue'
-          )}
-        </Button>
+        {/* Quick amounts */}
+        <div>
+          <p className="text-xs text-chase-muted mb-2">Quick amounts</p>
+          <div className="flex gap-2 flex-wrap">
+            {['100', '500', '1000', '5000'].map(v => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setAmount(v)}
+                className="px-3 py-1.5 rounded-full border border-chase-border text-xs font-medium text-chase-navy hover:bg-chase-navy hover:text-white transition-colors"
+              >
+                ${v}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-chase-navy text-white font-semibold py-4 rounded-xl hover:bg-chase-navy-dark transition-colors flex items-center justify-center gap-2 text-base"
+        >
+          <CheckCircle size={18} />
+          Review Deposit
+        </button>
       </form>
 
       <TransactionConfirmationDialog
-        open={showConfirmation}
-        onOpenChange={setShowConfirmation}
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirm}
+        isLoading={isPending}
         type="deposit"
         amount={amount}
-        description={description}
-        isLoading={deposit.isPending}
+        description={description || 'Deposit'}
       />
     </>
   );

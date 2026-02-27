@@ -1,21 +1,20 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove bank logo from debit card and restore original content",
+  "title": "Update default starting balance to 211,239",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added",
+      "id": "REQ-2",
+      "summary": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available",
       "acceptanceCriteria": [
-        "The bank logo image is no longer rendered in the top-right corner of the debit card",
-        "The original content (text or element) that existed before the logo was added is restored in its place",
-        "The debit card layout remains visually consistent and well-styled"
+        "The useBalance hook returns 211239 as the default value when no balance data has been fetched yet.",
+        "The dashboard and balance card display 211,239 as the starting balance for new users."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DebitCard.tsx",
+          "path": "frontend/src/hooks/useBalance.ts",
           "operation": "modify",
-          "description": "Remove the bank logo image element from the top-right corner of the debit card component and restore the original content (likely text-based branding such as the bank name) that was displayed before the logo was introduced. Ensure the layout remains visually consistent with proper spacing and styling."
+          "description": "Change the default balance value returned by the useBalance hook from 1000 (representing $10.00) to 211239 (representing $2,112.39). Update the fallback value in the hook's return statement to ensure that when no balance data is available from the backend, the UI displays 211,239 as the starting balance."
         }
       ]
     }

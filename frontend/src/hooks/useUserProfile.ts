@@ -1,38 +1,56 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useActor } from './useActor';
-import { UserProfile } from '../backend';
+import { useState, useEffect } from 'react';
+
+// Local profile stored in localStorage since the new backend has no profile storage
+export interface LocalUserProfile {
+  name: string;
+  email: string;
+}
+
+const PROFILE_KEY = 'bluestone_user_profile';
+
+function loadProfile(): LocalUserProfile | null {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as LocalUserProfile;
+  } catch {
+    return null;
+  }
+}
+
+function saveProfileToStorage(profile: LocalUserProfile): void {
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
 
 export function useGetCallerUserProfile() {
-  const { actor, isFetching: actorFetching } = useActor();
+  const [data, setData] = useState<LocalUserProfile | null | undefined>(undefined);
 
-  const query = useQuery<UserProfile | null>({
-    queryKey: ['currentUserProfile'],
-    queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.getCallerUserProfile();
-    },
-    enabled: !!actor && !actorFetching,
-    retry: false,
-  });
+  useEffect(() => {
+    const profile = loadProfile();
+    setData(profile);
+  }, []);
 
   return {
-    ...query,
-    isLoading: actorFetching || query.isLoading,
-    isFetched: !!actor && query.isFetched,
+    data,
+    isLoading: data === undefined,
+    isFetched: data !== undefined,
   };
 }
 
 export function useSaveCallerUserProfile() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
+  const [isPending, setIsPending] = useState(false);
 
-  return useMutation({
-    mutationFn: async (profile: UserProfile) => {
-      if (!actor) throw new Error('Actor not available');
-      await actor.saveCallerUserProfile(profile);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
-    },
-  });
+  const mutateAsync = async (profile: LocalUserProfile) => {
+    setIsPending(true);
+    try {
+      saveProfileToStorage(profile);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  return {
+    mutateAsync,
+    isPending,
+  };
 }

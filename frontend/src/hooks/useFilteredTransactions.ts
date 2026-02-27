@@ -1,21 +1,22 @@
-import { useState, useMemo } from 'react';
-import { Transaction } from '../backend';
+import { useMemo } from 'react';
+import type { LocalTransaction, TransactionKind } from './useTransactions';
 
-export function useFilteredTransactions(transactions: Transaction[]) {
-  const [filterType, setFilterType] = useState('all');
-  const [sortBy, setSortBy] = useState('date-desc');
+type SortOption = 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc';
 
-  const filteredTransactions = useMemo(() => {
+export function useFilteredTransactions(
+  transactions: LocalTransaction[],
+  typeFilter: TransactionKind | 'all',
+  sortOption: SortOption
+) {
+  return useMemo(() => {
     let filtered = [...transactions];
 
-    // Filter by type
-    if (filterType !== 'all') {
-      filtered = filtered.filter((t) => t.transactionType === filterType);
+    if (typeFilter !== 'all') {
+      filtered = filtered.filter(tx => tx.transactionType === typeFilter);
     }
 
-    // Sort
     filtered.sort((a, b) => {
-      switch (sortBy) {
+      switch (sortOption) {
         case 'date-desc':
           return Number(b.timestamp - a.timestamp);
         case 'date-asc':
@@ -30,13 +31,5 @@ export function useFilteredTransactions(transactions: Transaction[]) {
     });
 
     return filtered;
-  }, [transactions, filterType, sortBy]);
-
-  return {
-    filteredTransactions,
-    filterType,
-    setFilterType,
-    sortBy,
-    setSortBy,
-  };
+  }, [transactions, typeFilter, sortOption]);
 }

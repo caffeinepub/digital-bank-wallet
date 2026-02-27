@@ -1,127 +1,186 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useTransfer } from '../hooks/useQueries';
-import { validateAmount, validatePrincipal } from '../utils/validation';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { DollarSign, User, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from '@tanstack/react-router';
+import { useExternalTransfer } from '../hooks/useQueries';
+import { validateAmount, validatePrincipal } from '../utils/validation';
 import TransactionConfirmationDialog from './TransactionConfirmationDialog';
+import { useBalance } from '../hooks/useBalance';
+import { formatCurrency } from '../utils/formatters';
 import { Principal } from '@dfinity/principal';
 
-export default function TransferForm() {
-  const [recipient, setRecipient] = useState('');
+interface TransferFormProps {
+  onSuccess?: () => void;
+}
+
+export default function TransferForm({ onSuccess }: TransferFormProps) {
+  const [recipientPrincipal, setRecipientPrincipal] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const transfer = useTransfer();
-  const navigate = useNavigate();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [amountError, setAmountError] = useState('');
+  const [principalError, setPrincipalError] = useState('');
+
+  const { checkingBalance, isLoading: balanceLoading } = useBalance();
+  const { mutate: transferExternal, isPending } = useExternalTransfer();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const principalValidation = validatePrincipal(recipient);
-    if (!principalValidation.isValid) {
-      toast.error(principalValidation.error);
-      return;
+    let hasError = false;
+
+    const amtErr = validateAmount(amount);
+    if (amtErr) {
+      setAmountError(amtErr);
+      hasError = true;
+    } else {
+      const cents = Math.round(parseFloat(amount) * 100);
+      if (cents > Number(checkingBalance)) {
+        setAmountError(`Insufficient funds. Available: ${formatCurrency(checkingBalance)}`);
+        hasError = true;
+      } else {
+        setAmountError('');
+      }
     }
 
-    const amountValidation = validateAmount(amount);
-    if (!amountValidation.isValid) {
-      toast.error(amountValidation.error);
-      return;
+    const pErr = validatePrincipal(recipientPrincipal);
+    if (pErr) {
+      setPrincipalError(pErr);
+      hasError = true;
+    } else {
+      setPrincipalError('');
     }
 
-    setShowConfirmation(true);
+    if (!hasError) setShowConfirm(true);
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
+    const cents = Math.round(parseFloat(amount) * 100);
+
+    let toPrincipal: Principal;
     try {
-      await transfer.mutateAsync({
-        to: Principal.fromText(recipient.trim()),
-        amount: BigInt(Math.floor(parseFloat(amount) * 100)),
-        description: description.trim() || 'Transfer',
+      toPrincipal = Principal.fromText(recipientPrincipal.trim());
+    } catch {
+      toast.error('Invalid Receiver ID', {
+        description: 'The Receiver ID you entered is not a valid Principal ID.',
       });
-      toast.success('Transfer successful!');
-      setRecipient('');
-      setAmount('');
-      setDescription('');
-      setShowConfirmation(false);
-      navigate({ to: '/' });
-    } catch (error: any) {
-      toast.error(error.message || 'Transfer failed. Please try again.');
-      setShowConfirmation(false);
+      setShowConfirm(false);
+      return;
     }
+
+    transferExternal(
+      { to: toPrincipal, amount: BigInt(cents) },
+      {
+        onSuccess: () => {
+          toast.success('Transfer successful!', {
+            description: `$${parseFloat(amount).toFixed(2)} sent to ${recipientPrincipal.slice(0, 12)}...`,
+          });
+          setShowConfirm(false);
+          setAmount('');
+          setDescription('');
+          setRecipientPrincipal('');
+          onSuccess?.();
+        },
+        onError: (err: any) => {
+          const msg = err?.message || '';
+          const isInsufficient = msg.toLowerCase().includes('insufficient');
+          toast.error('Transfer failed', {
+            description: isInsufficient
+              ? 'Insufficient funds in your account.'
+              : msg || 'Please try again.',
+          });
+          setShowConfirm(false);
+        },
+      }
+    );
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="recipient">Recipient Principal ID</Label>
-          <Input
-            id="recipient"
-            type="text"
-            placeholder="xxxxx-xxxxx-xxxxx-xxxxx-xxx"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-            disabled={transfer.isPending}
-            required
-          />
-          <p className="text-xs text-muted-foreground">Enter the recipient's Principal ID</p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="amount">Amount</Label>
-          <Input
-            id="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            disabled={transfer.isPending}
-            required
-          />
-          <p className="text-xs text-muted-foreground">Enter the amount to transfer</p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Description (Optional)</Label>
-          <Textarea
-            id="description"
-            placeholder="Add a note about this transfer"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={transfer.isPending}
-            rows={3}
-          />
-        </div>
-
-        <Button type="submit" className="w-full" disabled={transfer.isPending}>
-          {transfer.isPending ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Processing...
-            </>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Available balance */}
+        <div className="bg-chase-bg rounded-xl p-4 flex items-center justify-between">
+          <span className="text-sm text-chase-muted font-medium">Available Balance</span>
+          {balanceLoading ? (
+            <span className="text-chase-navy font-bold text-sm">Loading...</span>
           ) : (
-            'Continue'
+            <span className="text-chase-navy font-bold text-lg">{formatCurrency(checkingBalance)}</span>
           )}
-        </Button>
+        </div>
+
+        {/* Receiver ID */}
+        <div>
+          <label className="block text-sm font-semibold text-chase-navy mb-2">Receiver ID</label>
+          <div className="relative">
+            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-chase-muted" />
+            <input
+              type="text"
+              value={recipientPrincipal}
+              onChange={e => { setRecipientPrincipal(e.target.value); setPrincipalError(''); }}
+              className="w-full border border-chase-border rounded-xl pl-9 pr-4 py-3.5 text-chase-navy text-sm focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent font-mono"
+              placeholder="e.g. aaaaa-aa or principal-id..."
+            />
+          </div>
+          {principalError && (
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <AlertCircle size={13} className="text-red-500 flex-shrink-0" />
+              <p className="text-red-500 text-xs">{principalError}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Amount */}
+        <div>
+          <label className="block text-sm font-semibold text-chase-navy mb-2">Amount</label>
+          <div className="relative">
+            <DollarSign size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-chase-muted" />
+            <input
+              type="number"
+              value={amount}
+              onChange={e => { setAmount(e.target.value); setAmountError(''); }}
+              className="w-full border border-chase-border rounded-xl pl-9 pr-4 py-3.5 text-chase-navy text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+            />
+          </div>
+          {amountError && (
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <AlertCircle size={13} className="text-red-500 flex-shrink-0" />
+              <p className="text-red-500 text-xs">{amountError}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="block text-sm font-semibold text-chase-navy mb-2">Description (optional)</label>
+          <input
+            type="text"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            className="w-full border border-chase-border rounded-xl px-4 py-3 text-chase-navy text-sm focus:outline-none focus:ring-2 focus:ring-chase-navy focus:border-transparent"
+            placeholder="e.g. Rent, Invoice payment..."
+            maxLength={100}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full bg-chase-navy text-white font-semibold py-4 rounded-xl hover:bg-chase-navy-dark transition-colors flex items-center justify-center gap-2 text-base disabled:opacity-60"
+        >
+          Review Transfer
+        </button>
       </form>
 
       <TransactionConfirmationDialog
-        open={showConfirmation}
-        onOpenChange={setShowConfirmation}
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirm}
+        isLoading={isPending}
         type="transfer"
         amount={amount}
-        description={description}
-        recipient={recipient}
-        isLoading={transfer.isPending}
+        description={description || 'Transfer'}
+        recipientPrincipal={recipientPrincipal}
       />
     </>
   );

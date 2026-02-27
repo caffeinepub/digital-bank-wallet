@@ -1,53 +1,47 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { useGetBalance } from '../hooks/useBalance';
-import { useGetCallerUserProfile } from '../hooks/useUserProfile';
+import { useBalance } from '../hooks/useBalance';
 import { formatCurrency } from '../utils/formatters';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function MobileBalanceCard() {
-  const { data: balance, isLoading: balanceLoading } = useGetBalance();
-  const { data: userProfile } = useGetCallerUserProfile();
   const [showBalance, setShowBalance] = useState(true);
+  const { checkingBalance, isLoading } = useBalance();
 
-  const userName = userProfile?.name ?? 'there';
+  const displayBalance = showBalance
+    ? (isLoading ? '••••••' : formatCurrency(checkingBalance))
+    : '••••••';
 
   return (
-    <div className="mx-5 mb-2 rounded-2xl px-5 py-3" style={{ background: 'oklch(1 0 0 / 0.12)' }}>
+    <div className="pt-2 pb-1">
       {/* Greeting */}
-      <p className="text-white/80 text-sm font-medium mb-2 text-center">
-        Hello, <span className="text-white font-bold">{userName}</span>
-      </p>
+      <p className="text-white/70 text-sm mb-1">Good {getTimeOfDay()}, Joshua 👋</p>
 
-      {/* Balance */}
-      <div className="text-center">
-        <p className="text-white/70 text-xs mb-1 tracking-wide">Your Balance</p>
-        {balanceLoading ? (
-          <Skeleton className="h-8 w-36 mx-auto rounded-lg" style={{ background: 'oklch(1 0 0 / 0.15)' }} />
-        ) : (
-          <div className="flex items-center justify-center gap-2">
-            <p className="text-3xl font-bold text-white tracking-tight">
-              {showBalance ? formatCurrency(balance ?? BigInt(0)) : '••••••'}
-            </p>
-            <button
-              onClick={() => setShowBalance(!showBalance)}
-              className="flex items-center justify-center w-7 h-7 rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
-              style={{
-                background: 'oklch(1 0 0 / 0.15)',
-                border: '1px solid oklch(1 0 0 / 0.2)',
-              }}
-              aria-label={showBalance ? 'Hide balance' : 'Show balance'}
-            >
-              {showBalance ? (
-                <EyeOff className="w-3.5 h-3.5 text-white/80" />
-              ) : (
-                <Eye className="w-3.5 h-3.5 text-white/80" />
-              )}
-            </button>
-          </div>
-        )}
-        <p className="text-white/60 text-xs mt-1 tracking-wide">Available Balance</p>
+      {/* Balance Row */}
+      <div className="flex items-center gap-3">
+        <div>
+          <p className="text-white/60 text-xs uppercase tracking-wider mb-0.5">Total Balance</p>
+          <p className="text-white text-3xl font-bold tracking-tight">
+            {displayBalance}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowBalance(v => !v)}
+          className="ml-auto text-white/60 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+          aria-label={showBalance ? 'Hide balance' : 'Show balance'}
+        >
+          {showBalance ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
       </div>
+
+      {/* Account hint */}
+      <p className="text-white/40 text-xs mt-1">Checking ••••4821</p>
     </div>
   );
+}
+
+function getTimeOfDay(): string {
+  const h = new Date().getHours();
+  if (h < 12) return 'morning';
+  if (h < 17) return 'afternoon';
+  return 'evening';
 }

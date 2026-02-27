@@ -1,61 +1,78 @@
-import { useGetTransactions } from '../hooks/useTransactions';
+import React, { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
+import { useTransactions } from '../hooks/useTransactions';
 import { useFilteredTransactions } from '../hooks/useFilteredTransactions';
 import TransactionTable from '../components/TransactionTable';
 import TransactionFilters from '../components/TransactionFilters';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import type { TransactionKind } from '../hooks/useTransactions';
+
+const ITEMS_PER_PAGE = 10;
 
 export default function TransactionHistory() {
-  const { data: transactions, isLoading, error } = useGetTransactions();
-  const {
-    filteredTransactions,
-    filterType,
-    setFilterType,
-    sortBy,
-    setSortBy,
-  } = useFilteredTransactions(transactions || []);
+  const navigate = useNavigate();
+  const { transactions, isLoading } = useTransactions();
+  const [typeFilter, setTypeFilter] = useState<TransactionKind | 'all'>('all');
+  const [sortOption, setSortOption] = useState<'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc'>('date-desc');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary" />
-            <p className="text-muted-foreground">Loading transaction history...</p>
+  const filtered = useFilteredTransactions(transactions, typeFilter, sortOption);
+
+  const handleTypeChange = (val: string) => {
+    setTypeFilter(val as TransactionKind | 'all');
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (val: string) => {
+    setSortOption(val as 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc');
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="min-h-screen bg-chase-bg">
+      {/* Header */}
+      <div className="bg-chase-navy px-4 pt-safe-top pb-4 sticky top-0 z-10">
+        <div className="flex items-center gap-3 pt-3">
+          <button
+            onClick={() => navigate({ to: '/' })}
+            className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <h1 className="text-white font-bold text-lg leading-tight">Transaction History</h1>
+            <p className="text-white/60 text-xs">All your transactions</p>
           </div>
         </div>
       </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Failed to load transactions. Please try refreshing the page.
-          </AlertDescription>
-        </Alert>
+      <div className="px-4 py-4 max-w-2xl mx-auto">
+        {/* Filters */}
+        <div className="mb-4">
+          <TransactionFilters
+            typeFilter={typeFilter}
+            sortOption={sortOption}
+            onTypeChange={handleTypeChange}
+            onSortChange={handleSortChange}
+          />
+        </div>
+
+        {/* Table */}
+        {isLoading ? (
+          <div className="space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 rounded-xl bg-white animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <TransactionTable
+            transactions={filtered}
+            currentPage={currentPage}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Transaction History</h1>
-        <p className="text-muted-foreground">View and filter all your transactions</p>
-      </div>
-
-      <TransactionFilters
-        filterType={filterType}
-        setFilterType={setFilterType}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-      />
-
-      <TransactionTable transactions={filteredTransactions} />
     </div>
   );
 }

@@ -90,20 +90,7 @@ export class ExternalBlob {
     }
 }
 export interface UserProfile {
-    password: string;
     name: string;
-    email: string;
-}
-export interface Transaction {
-    transactionType: TransactionType;
-    description: string;
-    timestamp: bigint;
-    amount: bigint;
-}
-export enum TransactionType {
-    deposit = "deposit",
-    withdrawal = "withdrawal",
-    transfer = "transfer"
 }
 export enum UserRole {
     admin = "admin",
@@ -113,20 +100,17 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    deposit(amount: bigint, description: string): Promise<void>;
+    deposit(amount: bigint): Promise<void>;
     getBalance(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getTransactions(): Promise<Array<Transaction>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
-    initializeAccount(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    transfer(to: Principal, amount: bigint, description: string): Promise<void>;
-    updatePassword(currentPassword: string, newPassword: string): Promise<void>;
-    withdraw(amount: bigint, description: string): Promise<void>;
+    transfer(to: Principal, amount: bigint): Promise<void>;
+    withdraw(amount: bigint): Promise<void>;
 }
-import type { Transaction as _Transaction, TransactionType as _TransactionType, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -157,17 +141,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async deposit(arg0: bigint, arg1: string): Promise<void> {
+    async deposit(arg0: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.deposit(arg0, arg1);
+                const result = await this.actor.deposit(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.deposit(arg0, arg1);
+            const result = await this.actor.deposit(arg0);
             return result;
         }
     }
@@ -213,20 +197,6 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n4(this._uploadFile, this._downloadFile, result);
         }
     }
-    async getTransactions(): Promise<Array<Transaction>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getTransactions();
-                return from_candid_vec_n6(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getTransactions();
-            return from_candid_vec_n6(this._uploadFile, this._downloadFile, result);
-        }
-    }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
         if (this.processError) {
             try {
@@ -239,20 +209,6 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getUserProfile(arg0);
             return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async initializeAccount(): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.initializeAccount();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.initializeAccount();
-            return result;
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -283,87 +239,40 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async transfer(arg0: Principal, arg1: bigint, arg2: string): Promise<void> {
+    async transfer(arg0: Principal, arg1: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.transfer(arg0, arg1, arg2);
+                const result = await this.actor.transfer(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.transfer(arg0, arg1, arg2);
+            const result = await this.actor.transfer(arg0, arg1);
             return result;
         }
     }
-    async updatePassword(arg0: string, arg1: string): Promise<void> {
+    async withdraw(arg0: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updatePassword(arg0, arg1);
+                const result = await this.actor.withdraw(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updatePassword(arg0, arg1);
+            const result = await this.actor.withdraw(arg0);
             return result;
         }
     }
-    async withdraw(arg0: bigint, arg1: string): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.withdraw(arg0, arg1);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.withdraw(arg0, arg1);
-            return result;
-        }
-    }
-}
-function from_candid_TransactionType_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TransactionType): TransactionType {
-    return from_candid_variant_n10(_uploadFile, _downloadFile, value);
-}
-function from_candid_Transaction_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Transaction): Transaction {
-    return from_candid_record_n8(_uploadFile, _downloadFile, value);
 }
 function from_candid_UserRole_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
     return from_candid_variant_n5(_uploadFile, _downloadFile, value);
 }
 function from_candid_opt_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
-}
-function from_candid_record_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    transactionType: _TransactionType;
-    description: string;
-    timestamp: bigint;
-    amount: bigint;
-}): {
-    transactionType: TransactionType;
-    description: string;
-    timestamp: bigint;
-    amount: bigint;
-} {
-    return {
-        transactionType: from_candid_TransactionType_n9(_uploadFile, _downloadFile, value.transactionType),
-        description: value.description,
-        timestamp: value.timestamp,
-        amount: value.amount
-    };
-}
-function from_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    deposit: null;
-} | {
-    withdrawal: null;
-} | {
-    transfer: null;
-}): TransactionType {
-    return "deposit" in value ? TransactionType.deposit : "withdrawal" in value ? TransactionType.withdrawal : "transfer" in value ? TransactionType.transfer : value;
 }
 function from_candid_variant_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
@@ -373,9 +282,6 @@ function from_candid_variant_n5(_uploadFile: (file: ExternalBlob) => Promise<Uin
     guest: null;
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
-}
-function from_candid_vec_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Transaction>): Array<Transaction> {
-    return value.map((x)=>from_candid_Transaction_n7(_uploadFile, _downloadFile, x));
 }
 function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);

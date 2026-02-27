@@ -1,47 +1,53 @@
-import { Menu, Bell } from 'lucide-react';
+import React from 'react';
+import { Bell, LogOut, Menu } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface MobileTopBarProps {
-  notificationCount?: number;
+  onLogout?: () => void;
 }
 
-export default function MobileTopBar({ notificationCount = 2 }: MobileTopBarProps) {
+export default function MobileTopBar({ onLogout }: MobileTopBarProps) {
   return (
-    <div className="flex items-center justify-between px-5 pt-5 pb-3">
-      {/* Hamburger Menu */}
+    <header className="bg-chase-navy px-4 py-3 flex items-center justify-between sticky top-0 z-20">
+      {/* Left: Menu */}
       <button
-        className="w-10 h-10 flex items-center justify-center rounded-xl transition-colors"
-        style={{ background: 'oklch(1 0 0 / 0.12)' }}
-        aria-label="Open menu"
+        className="text-white/80 hover:text-white transition-colors p-1"
+        onClick={() => toast.info('Menu coming soon')}
+        aria-label="Menu"
       >
-        <Menu className="w-5 h-5 text-white" />
+        <Menu size={22} />
       </button>
 
-      {/* Brand Center */}
+      {/* Center: Brand */}
       <div className="flex flex-col items-center">
-        <h1 className="text-xl font-bold text-white leading-tight tracking-wide">
-          Bluestone Bank
-        </h1>
-        <p className="text-xs font-medium tracking-wider" style={{ color: 'oklch(0.88 0.10 80)' }}>
-          Solid Foundation, Secure Funds
-        </p>
+        <span className="text-white font-bold text-base tracking-widest uppercase">
+          BlueStone <span className="text-chase-gold">Bank</span>
+        </span>
+        <span className="text-white/50 text-[9px] tracking-wider uppercase">Solid Foundation, Secure Funds</span>
       </div>
 
-      {/* Notification Bell */}
-      <button
-        className="w-10 h-10 flex items-center justify-center rounded-xl relative transition-colors"
-        style={{ background: 'oklch(1 0 0 / 0.12)' }}
-        aria-label="Notifications"
-      >
-        <Bell className="w-5 h-5 text-white" />
-        {notificationCount > 0 && (
-          <span
-            className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold"
-            style={{ background: 'oklch(0.55 0.22 25)' }}
-          >
-            {notificationCount}
+      {/* Right: Bell + Logout */}
+      <div className="flex items-center gap-2">
+        <button
+          className="relative text-white/80 hover:text-white transition-colors p-1"
+          onClick={() => toast.info('No new notifications')}
+          aria-label="Notifications"
+        >
+          <Bell size={20} />
+          <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+            3
           </span>
+        </button>
+        {onLogout && (
+          <button
+            className="text-white/80 hover:text-white transition-colors p-1"
+            onClick={onLogout}
+            aria-label="Logout"
+          >
+            <LogOut size={18} />
+          </button>
         )}
-      </button>
-    </div>
+      </div>
+    </header>
   );
 }

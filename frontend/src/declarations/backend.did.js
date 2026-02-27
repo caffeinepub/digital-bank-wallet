@@ -13,42 +13,24 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const UserProfile = IDL.Record({
-  'password' : IDL.Text,
-  'name' : IDL.Text,
-  'email' : IDL.Text,
-});
-export const TransactionType = IDL.Variant({
-  'deposit' : IDL.Null,
-  'withdrawal' : IDL.Null,
-  'transfer' : IDL.Null,
-});
-export const Transaction = IDL.Record({
-  'transactionType' : TransactionType,
-  'description' : IDL.Text,
-  'timestamp' : IDL.Int,
-  'amount' : IDL.Nat,
-});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'deposit' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+  'deposit' : IDL.Func([IDL.Nat], [], []),
   'getBalance' : IDL.Func([], [IDL.Nat], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getTransactions' : IDL.Func([], [IDL.Vec(Transaction)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
-  'initializeAccount' : IDL.Func([], [], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-  'transfer' : IDL.Func([IDL.Principal, IDL.Nat, IDL.Text], [], []),
-  'updatePassword' : IDL.Func([IDL.Text, IDL.Text], [], []),
-  'withdraw' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+  'transfer' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
+  'withdraw' : IDL.Func([IDL.Nat], [], []),
 });
 
 export const idlInitArgs = [];
@@ -59,42 +41,24 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const UserProfile = IDL.Record({
-    'password' : IDL.Text,
-    'name' : IDL.Text,
-    'email' : IDL.Text,
-  });
-  const TransactionType = IDL.Variant({
-    'deposit' : IDL.Null,
-    'withdrawal' : IDL.Null,
-    'transfer' : IDL.Null,
-  });
-  const Transaction = IDL.Record({
-    'transactionType' : TransactionType,
-    'description' : IDL.Text,
-    'timestamp' : IDL.Int,
-    'amount' : IDL.Nat,
-  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'deposit' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+    'deposit' : IDL.Func([IDL.Nat], [], []),
     'getBalance' : IDL.Func([], [IDL.Nat], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getTransactions' : IDL.Func([], [IDL.Vec(Transaction)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
-    'initializeAccount' : IDL.Func([], [], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-    'transfer' : IDL.Func([IDL.Principal, IDL.Nat, IDL.Text], [], []),
-    'updatePassword' : IDL.Func([IDL.Text, IDL.Text], [], []),
-    'withdraw' : IDL.Func([IDL.Nat, IDL.Text], [], []),
+    'transfer' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
+    'withdraw' : IDL.Func([IDL.Nat], [], []),
   });
 };
 

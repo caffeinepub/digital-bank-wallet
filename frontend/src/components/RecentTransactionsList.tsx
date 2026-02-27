@@ -1,31 +1,31 @@
-import { Transaction, TransactionType } from '../backend';
 import { ArrowDownCircle, ArrowUpCircle, ArrowRightCircle, Clock } from 'lucide-react';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from '@tanstack/react-router';
+import type { LocalTransaction, TransactionKind } from '../hooks/useTransactions';
 
 interface RecentTransactionsListProps {
-  transactions: Transaction[];
+  transactions: LocalTransaction[];
   isLoading: boolean;
 }
 
-function getTransactionIcon(type: TransactionType) {
+function getTransactionIcon(type: TransactionKind) {
   switch (type) {
-    case TransactionType.deposit:
+    case 'deposit':
       return (
         <div className="w-10 h-10 rounded-full flex items-center justify-center"
           style={{ background: 'oklch(0.60 0.18 145 / 0.12)' }}>
           <ArrowDownCircle className="w-5 h-5" style={{ color: 'oklch(0.55 0.18 145)' }} />
         </div>
       );
-    case TransactionType.withdrawal:
+    case 'withdrawal':
       return (
         <div className="w-10 h-10 rounded-full flex items-center justify-center"
           style={{ background: 'oklch(0.55 0.22 25 / 0.12)' }}>
           <ArrowUpCircle className="w-5 h-5" style={{ color: 'oklch(0.55 0.22 25)' }} />
         </div>
       );
-    case TransactionType.transfer:
+    case 'transfer':
       return (
         <div className="w-10 h-10 rounded-full flex items-center justify-center"
           style={{ background: 'oklch(0.28 0.07 240 / 0.12)' }}>
@@ -41,19 +41,19 @@ function getTransactionIcon(type: TransactionType) {
   }
 }
 
-function getAmountDisplay(type: TransactionType, amount: bigint) {
+function getAmountDisplay(type: TransactionKind, amount: bigint) {
   const formatted = formatCurrency(amount);
-  if (type === TransactionType.deposit) {
+  if (type === 'deposit') {
     return <span className="font-semibold text-sm" style={{ color: 'oklch(0.50 0.18 145)' }}>+{formatted}</span>;
   }
   return <span className="font-semibold text-sm" style={{ color: 'oklch(0.55 0.22 25)' }}>-{formatted}</span>;
 }
 
-function getTypeLabel(type: TransactionType): string {
+function getTypeLabel(type: TransactionKind): string {
   switch (type) {
-    case TransactionType.deposit: return 'Deposit';
-    case TransactionType.withdrawal: return 'Withdrawal';
-    case TransactionType.transfer: return 'Transfer';
+    case 'deposit': return 'Deposit';
+    case 'withdrawal': return 'Withdrawal';
+    case 'transfer': return 'Transfer';
     default: return 'Transaction';
   }
 }

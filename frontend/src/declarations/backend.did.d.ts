@@ -10,38 +10,22 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface Transaction {
-  'transactionType' : TransactionType,
-  'description' : string,
-  'timestamp' : bigint,
-  'amount' : bigint,
-}
-export type TransactionType = { 'deposit' : null } |
-  { 'withdrawal' : null } |
-  { 'transfer' : null };
-export interface UserProfile {
-  'password' : string,
-  'name' : string,
-  'email' : string,
-}
+export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'deposit' : ActorMethod<[bigint, string], undefined>,
+  'deposit' : ActorMethod<[bigint], undefined>,
   'getBalance' : ActorMethod<[], bigint>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getTransactions' : ActorMethod<[], Array<Transaction>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
-  'initializeAccount' : ActorMethod<[], undefined>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
-  'transfer' : ActorMethod<[Principal, bigint, string], undefined>,
-  'updatePassword' : ActorMethod<[string, string], undefined>,
-  'withdraw' : ActorMethod<[bigint, string], undefined>,
+  'transfer' : ActorMethod<[Principal, bigint], undefined>,
+  'withdraw' : ActorMethod<[bigint], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

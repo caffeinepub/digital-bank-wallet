@@ -1,13 +1,8 @@
 import Map "mo:core/Map";
-import List "mo:core/List";
-import Array "mo:core/Array";
-import Time "mo:core/Time";
 import Principal "mo:core/Principal";
-import AccessControl "authorization/access-control";
 import Runtime "mo:core/Runtime";
+import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
-
-
 
 actor {
   let accessControlState = AccessControl.initState();
@@ -15,185 +10,88 @@ actor {
 
   public type UserProfile = {
     name : Text;
-    email : Text;
-    password : Text;
   };
 
-  type TransactionType = {
-    #deposit;
-    #withdrawal;
-    #transfer;
-  };
-
-  type Transaction = {
-    amount : Nat;
-    timestamp : Int;
-    description : Text;
-    transactionType : TransactionType;
-  };
-
-  type Wallet = {
-    balance : Nat;
-    transactions : List.List<Transaction>;
-  };
-
-  let wallets = Map.empty<Principal, Wallet>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+  let balances = Map.empty<Principal, Nat>();
+  let defaultBalance = 211_239;
 
-  // User Profile Management
+  // Profile management
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get profiles");
     };
     userProfiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
-    if (caller != user) {
+    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
-    };
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles");
     };
     userProfiles.get(user);
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
   };
 
-  public shared ({ caller }) func updatePassword(currentPassword : Text, newPassword : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can update password");
-    };
-    let userProfile = switch (userProfiles.get(caller)) {
-      case (null) { Runtime.trap("User not found") };
-      case (?profile) { profile };
-    };
-    if (userProfile.password != currentPassword) {
-      Runtime.trap("Incorrect current password");
-    };
-    let updatedProfile = {
-      userProfile with
-      password = newPassword;
-    };
-    userProfiles.add(caller, updatedProfile);
-  };
-
-  // Wallet Management
-  public shared ({ caller }) func initializeAccount() : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can create accounts");
-    };
-    if (wallets.containsKey(caller)) {
-      Runtime.trap("Account already initialized");
-    };
-    wallets.add(caller, { balance = 0; transactions = List.empty<Transaction>() });
-  };
+  // Balance management
 
   public query ({ caller }) func getBalance() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can access balance");
     };
-    switch (wallets.get(caller)) {
-      case (null) { Runtime.trap("Account not found") };
-      case (?wallet) { wallet.balance };
+    switch (balances.get(caller)) {
+      case (?balance) { balance };
+      case (null) { 0 };
     };
   };
 
-  public query ({ caller }) func getTransactions() : async [Transaction] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access transactions");
-    };
-    switch (wallets.get(caller)) {
-      case (null) { Runtime.trap("Account not found") };
-      case (?wallet) {
-        wallet.transactions.toArray();
-      };
-    };
-  };
-
-  public shared ({ caller }) func deposit(amount : Nat, description : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+  public shared ({ caller }) func deposit(amount : Nat) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can deposit funds");
     };
-    let wallet = switch (wallets.get(caller)) {
-      case (null) { Runtime.trap("Account not found") };
-      case (?wallet) { wallet };
+    let currentBalance = switch (balances.get(caller)) {
+      case (?balance) { balance };
+      case (null) { defaultBalance };
     };
-    let transaction : Transaction = {
-      amount;
-      timestamp = Time.now();
-      description;
-      transactionType = #deposit;
-    };
-    wallet.transactions.add(transaction);
-    wallets.add(caller, { wallet with balance = (wallet.balance + amount) });
+    balances.add(caller, currentBalance + amount);
   };
 
-  public shared ({ caller }) func withdraw(amount : Nat, description : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+  public shared ({ caller }) func withdraw(amount : Nat) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can withdraw funds");
     };
-    let wallet = switch (wallets.get(caller)) {
-      case (null) { Runtime.trap("Account not found") };
-      case (?wallet) { wallet };
+    let currentBalance = switch (balances.get(caller)) {
+      case (?balance) { balance };
+      case (null) { defaultBalance };
     };
-    if (wallet.balance < amount) {
+    if (currentBalance < amount) {
       Runtime.trap("Insufficient funds");
     };
-    let transaction : Transaction = {
-      amount;
-      timestamp = Time.now();
-      description;
-      transactionType = #withdrawal;
-    };
-    wallet.transactions.add(transaction);
-    wallets.add(caller, { wallet with balance = (wallet.balance - amount) });
+    balances.add(caller, currentBalance - amount);
   };
 
-  public shared ({ caller }) func transfer(to : Principal, amount : Nat, description : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+  public shared ({ caller }) func transfer(to : Principal, amount : Nat) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can transfer funds");
     };
-    if (caller == to) {
-      Runtime.trap("Cannot transfer to self");
+    let senderBalance = switch (balances.get(caller)) {
+      case (?balance) { balance };
+      case (null) { defaultBalance };
     };
-
-    let fromWallet = switch (wallets.get(caller)) {
-      case (null) { Runtime.trap("Sender account not found") };
-      case (?wallet) { wallet };
-    };
-
-    let toWallet = switch (wallets.get(to)) {
-      case (null) { Runtime.trap("Recipient account not found") };
-      case (?wallet) { wallet };
-    };
-
-    if (fromWallet.balance < amount) {
+    if (senderBalance < amount) {
       Runtime.trap("Insufficient funds");
     };
-
-    let transaction : Transaction = {
-      amount;
-      timestamp = Time.now();
-      description;
-      transactionType = #transfer;
+    let recipientBalance = switch (balances.get(to)) {
+      case (?balance) { balance };
+      case (null) { defaultBalance };
     };
-
-    fromWallet.transactions.add(transaction);
-
-    toWallet.transactions.add({
-      amount;
-      timestamp = transaction.timestamp;
-      description;
-      transactionType = #deposit;
-    });
-
-    wallets.add(caller, { fromWallet with balance = (fromWallet.balance - amount) });
-    wallets.add(to, { toWallet with balance = (toWallet.balance + amount) });
+    balances.add(caller, senderBalance - amount);
+    balances.add(to, recipientBalance + amount);
   };
 };

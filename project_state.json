@@ -4,19 +4,34 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-remove-the-bank-logo-image-from-the-top-right-corner-of-the-debitcard-component-and-restore-the-original-content-that-was-displayed-in-that-area-before-the-logo-was-added-e-g-the-bank-name-text-or-any-other-original-branding-element",
-      "title": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added (e.g., the bank name text or any other original branding element).",
+      "id": "feature-update-the-fallback-default-balance-value-in-the-usebalance-hook-from-1000-to-211239-so-that-the-ui-reflects-the-correct-default-when-no-backend-data-is-available",
+      "title": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Remove bank logo from debit card and restore original content",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Update default starting balance to 211,239 for new user accounts",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Update the default starting balance for new user accounts in the backend from 1000 to 211239.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Update default starting balance to 211,239",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

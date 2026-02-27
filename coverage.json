@@ -1,34 +1,46 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-25T00:44:48.938Z",
+  "generatedAt": "2026-02-27T15:51:29.408Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
+    "total": 2,
     "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added (e.g., the bank name text or any other original branding element).",
+        "summary": "Update the default starting balance for new user accounts in the backend from 1000 to 211239.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DebitCard.tsx"
+          "frontend/src/hooks/useBalance.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/DebitCard.tsx"
+          "frontend/src/hooks/useBalance.ts"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/DebitCard.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useBalance.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,33 +1,49 @@
 {
   "kind": "build_request",
-  "title": "Remove bank logo from debit card and restore original content",
+  "title": "Update default starting balance to 211,239",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the bank logo image from the top-right corner of the DebitCard component and restore the original content that was displayed in that area before the logo was added (e.g., the bank name text or any other original branding element).",
-      "target": "frontend",
+      "text": "Update the default starting balance for new user accounts in the backend from 1000 to 211239.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-last"
         ],
         "quotes": [
-          "can you cancel the logo and add what was there before"
+          "make it 211239"
         ]
       },
       "acceptanceCriteria": [
-        "The bank logo image is no longer rendered in the top-right corner of the debit card",
-        "The original content (text or element) that existed before the logo was added is restored in its place",
-        "The debit card layout remains visually consistent and well-styled"
+        "When a new user account is created, their initial balance is 211239 (not 1000).",
+        "Existing accounts are not affected by this change."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the fallback/default balance value in the useBalance hook from 1000 to 211239 so that the UI reflects the correct default when no backend data is available.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "make it 211239"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The useBalance hook returns 211239 as the default value when no balance data has been fetched yet.",
+        "The dashboard and balance card display 211,239 as the starting balance for new users."
       ]
     }
   ],
   "constraints": [
-    "Do not alter any other part of the DebitCard component beyond removing the logo and restoring the original top-right content"
+    "Do not alter any existing user balances already stored in the canister."
   ],
   "nonGoals": [
-    "Redesigning the debit card layout",
-    "Changing any other component outside of DebitCard.tsx"
+    "Changing any other default values or account settings.",
+    "Modifying transaction history or any other backend logic."
   ],
   "imageRequirements": {
     "required": [],

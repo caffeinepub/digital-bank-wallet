@@ -1,28 +1,28 @@
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { ArrowLeft, PlusCircle } from 'lucide-react';
 import DepositForm from '../components/DepositForm';
 
 export default function DepositPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <Button
-        variant="ghost"
-        onClick={() => navigate({ to: '/' })}
-        className="mb-6 gap-2"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Dashboard
-      </Button>
+    <div className="min-h-screen bg-chase-bg flex flex-col max-w-md mx-auto">
+      {/* Header */}
+      <header className="bg-chase-navy px-4 py-4 flex items-center gap-3 sticky top-0 z-10">
+        <button
+          onClick={() => navigate({ to: '/' })}
+          className="text-white/80 hover:text-white transition-colors p-1"
+        >
+          <ArrowLeft size={22} />
+        </button>
+        <h1 className="text-white font-bold text-lg flex-1">Deposit Funds</h1>
+        <PlusCircle size={20} className="text-chase-gold" />
+      </header>
 
-      <div className="bg-card rounded-xl border border-border p-6 md:p-8 shadow-sm">
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Deposit Funds</h1>
-          <p className="text-muted-foreground">Add money to your wallet</p>
-        </div>
-        <DepositForm />
+      {/* Content */}
+      <div className="flex-1 px-4 py-6">
+        <DepositForm onSuccess={() => navigate({ to: '/' })} />
       </div>
     </div>
   );

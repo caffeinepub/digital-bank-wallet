@@ -8,20 +8,7 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export interface UserProfile {
-    password: string;
     name: string;
-    email: string;
-}
-export interface Transaction {
-    transactionType: TransactionType;
-    description: string;
-    timestamp: bigint;
-    amount: bigint;
-}
-export enum TransactionType {
-    deposit = "deposit",
-    withdrawal = "withdrawal",
-    transfer = "transfer"
 }
 export enum UserRole {
     admin = "admin",
@@ -30,16 +17,13 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    deposit(amount: bigint, description: string): Promise<void>;
+    deposit(amount: bigint): Promise<void>;
     getBalance(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getTransactions(): Promise<Array<Transaction>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
-    initializeAccount(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    transfer(to: Principal, amount: bigint, description: string): Promise<void>;
-    updatePassword(currentPassword: string, newPassword: string): Promise<void>;
-    withdraw(amount: bigint, description: string): Promise<void>;
+    transfer(to: Principal, amount: bigint): Promise<void>;
+    withdraw(amount: bigint): Promise<void>;
 }

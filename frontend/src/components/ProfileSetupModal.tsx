@@ -15,12 +15,11 @@ interface ProfileSetupModalProps {
 export default function ProfileSetupModal({ onComplete }: ProfileSetupModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const saveProfile = useSaveCallerUserProfile();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       toast.error('Please enter your name');
       return;
@@ -31,27 +30,16 @@ export default function ProfileSetupModal({ onComplete }: ProfileSetupModalProps
       return;
     }
 
-    const emailValidation = validateEmail(email);
-    if (!emailValidation.isValid) {
-      toast.error(emailValidation.error || 'Invalid email');
-      return;
-    }
-
-    if (!password) {
-      toast.error('Please enter a password');
-      return;
-    }
-
-    if (password.length < 8) {
-      toast.error('Password must be at least 8 characters');
+    const emailError = validateEmail(email);
+    if (emailError) {
+      toast.error(emailError || 'Invalid email');
       return;
     }
 
     try {
-      await saveProfile.mutateAsync({ 
+      await saveProfile.mutateAsync({
         name: name.trim(),
         email: email.trim(),
-        password: password
       });
       toast.success('Profile created successfully!');
       onComplete();
@@ -92,20 +80,6 @@ export default function ProfileSetupModal({ onComplete }: ProfileSetupModalProps
               onChange={(e) => setEmail(e.target.value)}
               disabled={saveProfile.isPending}
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter a secure password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={saveProfile.isPending}
-            />
-            <p className="text-xs text-muted-foreground">
-              Password must be at least 8 characters
-            </p>
           </div>
           <Button type="submit" className="w-full" disabled={saveProfile.isPending}>
             {saveProfile.isPending ? (

@@ -3,148 +3,157 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.75rem;
-        
-        /* BlueStone Bank - Dark Navy & Gold palette */
-        --background: 0.96 0.008 240;
-        --foreground: 0.15 0.025 240;
-        
-        --card: 1 0 0;
-        --card-foreground: 0.15 0.025 240;
-        
-        --popover: 1 0 0;
-        --popover-foreground: 0.15 0.025 240;
-        
-        /* Primary - Deep Navy */
-        --primary: 0.28 0.07 240;
-        --primary-foreground: 0.98 0.005 60;
-        
-        /* Secondary - Light slate */
-        --secondary: 0.93 0.015 240;
-        --secondary-foreground: 0.25 0.04 240;
-        
-        --muted: 0.93 0.012 240;
-        --muted-foreground: 0.52 0.025 240;
-        
-        /* Accent - Gold */
-        --accent: 0.78 0.14 75;
-        --accent-foreground: 0.15 0.025 240;
-        
-        --destructive: 0.55 0.22 25;
-        --destructive-foreground: 0.98 0.005 60;
-        
-        --border: 0.88 0.012 240;
-        --input: 0.88 0.012 240;
-        --ring: 0.28 0.07 240;
-        
-        /* Bank-specific tokens */
-        --navy-deep: 0.20 0.08 240;
-        --navy-mid: 0.28 0.07 240;
-        --navy-light: 0.38 0.06 240;
-        --gold: 0.78 0.14 75;
-        --gold-light: 0.88 0.10 80;
-        --success: 0.60 0.18 145;
-        --danger: 0.55 0.22 25;
-        
-        --chart-1: 0.60 0.18 145;
-        --chart-2: 0.55 0.15 200;
-        --chart-3: 0.55 0.18 25;
-        --chart-4: 0.78 0.14 75;
-        --chart-5: 0.50 0.10 300;
-    }
+  :root {
+    /* Chase Bank-inspired color system */
+    --background: oklch(0.97 0.005 240);
+    --foreground: oklch(0.15 0.03 240);
 
-    .dark {
-        --background: 0.14 0.03 240;
-        --foreground: 0.94 0.01 240;
-        
-        --card: 0.18 0.03 240;
-        --card-foreground: 0.94 0.01 240;
-        
-        --popover: 0.16 0.03 240;
-        --popover-foreground: 0.94 0.01 240;
-        
-        --primary: 0.78 0.14 75;
-        --primary-foreground: 0.15 0.025 240;
-        
-        --secondary: 0.24 0.04 240;
-        --secondary-foreground: 0.94 0.01 240;
-        
-        --muted: 0.24 0.04 240;
-        --muted-foreground: 0.62 0.02 240;
-        
-        --accent: 0.78 0.14 75;
-        --accent-foreground: 0.15 0.025 240;
-        
-        --destructive: 0.60 0.20 25;
-        --destructive-foreground: 0.94 0.01 240;
-        
-        --border: 0.26 0.04 240;
-        --input: 0.26 0.04 240;
-        --ring: 0.78 0.14 75;
-        
-        --navy-deep: 0.12 0.04 240;
-        --navy-mid: 0.20 0.06 240;
-        --navy-light: 0.30 0.05 240;
-        --gold: 0.78 0.14 75;
-        --gold-light: 0.88 0.10 80;
-        --success: 0.60 0.18 145;
-        --danger: 0.60 0.20 25;
-        
-        --chart-1: 0.60 0.18 145;
-        --chart-2: 0.55 0.15 200;
-        --chart-3: 0.55 0.18 25;
-        --chart-4: 0.78 0.14 75;
-        --chart-5: 0.50 0.10 300;
-    }
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.15 0.03 240);
 
-    * {
-        @apply border-border;
-    }
-    
-    body {
-        @apply bg-background text-foreground;
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.15 0.03 240);
+
+    /* Navy blue primary - Chase-style */
+    --primary: oklch(0.28 0.08 240);
+    --primary-foreground: oklch(1 0 0);
+
+    --secondary: oklch(0.94 0.01 240);
+    --secondary-foreground: oklch(0.28 0.08 240);
+
+    --muted: oklch(0.94 0.01 240);
+    --muted-foreground: oklch(0.55 0.02 240);
+
+    /* Gold accent */
+    --accent: oklch(0.78 0.12 75);
+    --accent-foreground: oklch(0.2 0.05 75);
+
+    --destructive: oklch(0.55 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(0.88 0.01 240);
+    --input: oklch(0.88 0.01 240);
+    --ring: oklch(0.28 0.08 240);
+
+    --radius: 0.75rem;
+
+    /* Chase-specific tokens */
+    --chase-navy: oklch(0.25 0.09 240);
+    --chase-navy-dark: oklch(0.18 0.07 240);
+    --chase-gold: oklch(0.78 0.12 75);
+    --chase-gold-dark: oklch(0.65 0.14 75);
+    --chase-bg: oklch(0.96 0.005 240);
+    --chase-border: oklch(0.88 0.01 240);
+    --chase-muted: oklch(0.55 0.02 240);
+  }
+
+  .dark {
+    --background: oklch(0.12 0.03 240);
+    --foreground: oklch(0.95 0.01 240);
+
+    --card: oklch(0.17 0.04 240);
+    --card-foreground: oklch(0.95 0.01 240);
+
+    --popover: oklch(0.17 0.04 240);
+    --popover-foreground: oklch(0.95 0.01 240);
+
+    --primary: oklch(0.65 0.12 240);
+    --primary-foreground: oklch(0.1 0.02 240);
+
+    --secondary: oklch(0.22 0.04 240);
+    --secondary-foreground: oklch(0.95 0.01 240);
+
+    --muted: oklch(0.22 0.04 240);
+    --muted-foreground: oklch(0.65 0.02 240);
+
+    --accent: oklch(0.78 0.12 75);
+    --accent-foreground: oklch(0.15 0.05 75);
+
+    --destructive: oklch(0.55 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(0.28 0.04 240);
+    --input: oklch(0.28 0.04 240);
+    --ring: oklch(0.65 0.12 240);
+
+    --chase-navy: oklch(0.25 0.09 240);
+    --chase-navy-dark: oklch(0.18 0.07 240);
+    --chase-gold: oklch(0.78 0.12 75);
+    --chase-gold-dark: oklch(0.65 0.14 75);
+    --chase-bg: oklch(0.14 0.03 240);
+    --chase-border: oklch(0.28 0.04 240);
+    --chase-muted: oklch(0.55 0.02 240);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Safe area for mobile bottom nav */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Card flip animation */
 .card-flip-container {
-    perspective: 1200px;
+  perspective: 1000px;
 }
 
 .card-flip-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
-    transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
 
 .card-flip-container.flipped .card-flip-inner {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
-.card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    border-radius: 16px;
-    overflow: hidden;
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.card-face-back {
-    transform: rotateY(180deg);
+.card-back {
+  transform: rotateY(180deg);
 }
 
-/* Balance toggle transition */
-.balance-value {
-    transition: opacity 0.3s ease, filter 0.3s ease;
+/* Balance blur toggle */
+.balance-hidden {
+  filter: blur(8px);
+  user-select: none;
 }
 
-.balance-value.hidden-balance {
-    filter: blur(8px);
-    opacity: 0.6;
+/* Smooth transitions */
+.transition-balance {
+  transition: filter 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.75 0.02 240);
+  border-radius: 2px;
 }
